@@ -25,8 +25,7 @@ public:
     Fabrik(float tolerance, float eps);
     
     void setJoints(Point one, Point two, Point three, Point four);
-    void setGoal(Point x);
-    void setGoal(float x, float y, float z);
+    void setGoal(Point x); 
     Point* getJoints();
     void compute();
     void shrinkEnd();

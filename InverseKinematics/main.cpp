@@ -36,13 +36,22 @@ std::vector<float> endPosition[3];
 Fabrik fabrik(tolerance, epsilon);
 
 void generateLinks() {
-    Point p0(0.0001, 0.0001, 10);
-    Point p1(0, 10, 10);
-    Point p2(0, 20, 10);
-    Point p3(0, 30, 10);
-    Point goal(0, 3, 38);
-    fabrik.setGoal(goal);
-    fabrik.setJoints(p0,p1,p2,p3);
+    Position p0(0.0001, 0.0001, 10);
+    Position p1(0, 10, 10);
+    Position p2(0, 20, 10);
+    Position p3(0, 30, 10);
+    Position goal(0, 3, 38);
+    
+    Axis AxisInit;
+
+    Point P0(p0, AxisInit);
+    Point P1(p1, AxisInit);
+    Point P2(p2, AxisInit);
+    Point P3(p3, AxisInit);
+    Point GOAL(goal, AxisInit);
+    
+    fabrik.setGoal(GOAL);
+    fabrik.setJoints(P0,P1,P2,P3);
     jointNum = 4;
 }
 
@@ -58,12 +67,12 @@ int main(int argc, const char * argv[]) {
     
     for (int i = 0; i < jointNum; i++) {
         
-      //  printf("%lf,%lf,%lf\n",joints[i].getValues()[0],joints[i].getValues()[1],joints[i].getValues()[2]);
+        printf("%lf,%lf,%lf\n",joints[i].getPosition().getValues()[0],joints[i].getPosition().getValues()[1],joints[i].getPosition().getValues()[2]);
     }
     Quaternion q1(0.707,0.707,0,0);
     Quaternion q2(0.707,0, 0.707,0);
     Quaternion q3 = q1*q2;
-    //printf("%lf  %lf  %lf  %lf\n",q3.getW(),q3.getX(),q3.getY(),q3.getZ());
+    printf("%lf  %lf  %lf  %lf\n",q3.getW(),q3.getX(),q3.getY(),q3.getZ());
     
     Vector3 A(1,0,0);
     Vector3 B(0,1,0);

@@ -17,16 +17,15 @@ class Axis{
     Vector3 axis[3];
 public:
     
-    Axis(Vector3 X, Vector3 Y, Vector3 Z);
-    
     Axis() {
         Vector3 X(1,0,0);
         Vector3 Y(0,1,0);
         Vector3 Z(0,0,1);
         Axis(X, Y, Z);
     }
+    Axis(Vector3 X, Vector3 Y, Vector3 Z);
+    Axis(Axis& other);
     
-    Axis(const Axis& other);
     Vector3 GetXAxis();
     Vector3 GetYAxis();
     Vector3 GetZAxis();
