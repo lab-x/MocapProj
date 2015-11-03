@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A315D4F1BE72235002FE370 /* point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A315D4D1BE72235002FE370 /* point.cpp */; };
+		6A315D521BE72697002FE370 /* fabrik.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A315D501BE72697002FE370 /* fabrik.cpp */; };
+		6A315D561BE76E6E002FE370 /* quaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A315D541BE76E6E002FE370 /* quaternion.cpp */; };
+		6A315D591BE85753002FE370 /* vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A315D571BE85753002FE370 /* vector3.cpp */; };
+		6A315D5C1BE88771002FE370 /* axis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A315D5A1BE88771002FE370 /* axis.cpp */; };
+		6A315D5F1BE8A181002FE370 /* position.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A315D5D1BE8A181002FE370 /* position.cpp */; };
 		6A987B571BE71FF800C6B7AB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A987B561BE71FF800C6B7AB /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +29,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6A315D4D1BE72235002FE370 /* point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = point.cpp; sourceTree = "<group>"; };
+		6A315D4E1BE72235002FE370 /* point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = point.h; sourceTree = "<group>"; };
+		6A315D501BE72697002FE370 /* fabrik.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fabrik.cpp; sourceTree = "<group>"; };
+		6A315D511BE72697002FE370 /* fabrik.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fabrik.h; sourceTree = "<group>"; };
+		6A315D541BE76E6E002FE370 /* quaternion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quaternion.cpp; sourceTree = "<group>"; };
+		6A315D551BE76E6E002FE370 /* quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quaternion.h; sourceTree = "<group>"; };
+		6A315D571BE85753002FE370 /* vector3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector3.cpp; sourceTree = "<group>"; };
+		6A315D581BE85753002FE370 /* vector3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector3.h; sourceTree = "<group>"; };
+		6A315D5A1BE88771002FE370 /* axis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = axis.cpp; sourceTree = "<group>"; };
+		6A315D5B1BE88771002FE370 /* axis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = axis.h; sourceTree = "<group>"; };
+		6A315D5D1BE8A181002FE370 /* position.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = position.cpp; sourceTree = "<group>"; };
+		6A315D5E1BE8A181002FE370 /* position.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = position.h; sourceTree = "<group>"; };
 		6A987B531BE71FF800C6B7AB /* InverseKinematics */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = InverseKinematics; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A987B561BE71FF800C6B7AB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,6 +76,18 @@
 			isa = PBXGroup;
 			children = (
 				6A987B561BE71FF800C6B7AB /* main.cpp */,
+				6A315D4D1BE72235002FE370 /* point.cpp */,
+				6A315D501BE72697002FE370 /* fabrik.cpp */,
+				6A315D511BE72697002FE370 /* fabrik.h */,
+				6A315D4E1BE72235002FE370 /* point.h */,
+				6A315D5D1BE8A181002FE370 /* position.cpp */,
+				6A315D5E1BE8A181002FE370 /* position.h */,
+				6A315D5A1BE88771002FE370 /* axis.cpp */,
+				6A315D5B1BE88771002FE370 /* axis.h */,
+				6A315D571BE85753002FE370 /* vector3.cpp */,
+				6A315D581BE85753002FE370 /* vector3.h */,
+				6A315D541BE76E6E002FE370 /* quaternion.cpp */,
+				6A315D551BE76E6E002FE370 /* quaternion.h */,
 			);
 			path = InverseKinematics;
 			sourceTree = "<group>";
@@ -118,7 +148,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A315D591BE85753002FE370 /* vector3.cpp in Sources */,
+				6A315D4F1BE72235002FE370 /* point.cpp in Sources */,
+				6A315D5C1BE88771002FE370 /* axis.cpp in Sources */,
+				6A315D561BE76E6E002FE370 /* quaternion.cpp in Sources */,
+				6A315D5F1BE8A181002FE370 /* position.cpp in Sources */,
 				6A987B571BE71FF800C6B7AB /* main.cpp in Sources */,
+				6A315D521BE72697002FE370 /* fabrik.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,6 +268,7 @@
 				6A987B5C1BE71FF800C6B7AB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

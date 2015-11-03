@@ -10,5 +10,30 @@
 #define __InverseKinematics__fabrik__
 
 #include <stdio.h>
+#include "point.h"
+#include "axis.h"
+
+
+class Fabrik {
+    Point goal;
+    Point joints[4];
+    float d[3];
+    float tol;
+    float epsilon;
+public:
+    Fabrik() {}
+    Fabrik(float tolerance, float eps);
+    
+    void setJoints(Point one, Point two, Point three, Point four);
+    void setGoal(Point x);
+    void setGoal(float x, float y, float z);
+    Point* getJoints();
+    void compute();
+    void shrinkEnd();
+    void Position_Constraint(Point ThisJP, Point PrevJP);
+    void Orientation_Constraint(Point ThisJP, Point PrevJP);
+};
+
 
 #endif /* defined(__InverseKinematics__fabrik__) */
+

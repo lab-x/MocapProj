@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>362EB1A0-37F9-46A5-99A5-ED8D71DA711D</string>
+	<key>IDESourceControlProjectName</key>
+	<string>InverseKinematics</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>D56716D5AFD5A787E608170F0E0B64518EB21D27</key>
+		<string>https://github.com/KayTsao/MocapProj.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>InverseKinematics.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>D56716D5AFD5A787E608170F0E0B64518EB21D27</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/KayTsao/MocapProj.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>D56716D5AFD5A787E608170F0E0B64518EB21D27</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D56716D5AFD5A787E608170F0E0B64518EB21D27</string>
+			<key>IDESourceControlWCCName</key>
+			<string>InverseKinematics</string>
+		</dict>
+	</array>
+</dict>
+</plist>
