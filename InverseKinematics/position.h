@@ -37,49 +37,25 @@ public:
     Position& operator=(const Position& rhs);
     bool operator == (const Position &rhs) const;
     
+    
     friend Position operator+(Position lhs, const Position& rhs){
-        Position rst;
-        rst.values[0] = lhs.values[0] + rhs.values[0];
-        rst.values[1] = lhs.values[1] + rhs.values[1];
-        rst.values[2] = lhs.values[2] + rhs.values[2];
-        
-        return rst;
+        return Position(lhs.values[0] + rhs.values[0],lhs.values[1] + rhs.values[1], lhs.values[2] + rhs.values[2]);
     };
     
     friend Position operator-(Position lhs, Position rhs){
-        Position rst;
-        rst.values[0] = lhs.values[0] - rhs.values[0];
-        rst.values[1] = lhs.values[1] - rhs.values[1];
-        rst.values[2] = lhs.values[2] - rhs.values[2];
-        
-        return rst;
+        return Position(lhs.values[0] - rhs.values[0], lhs.values[1] - rhs.values[1],lhs.values[2] - rhs.values[2]);
     };
     
     friend Position operator*(Position lhs, float rhs){
-        Position rst;
-        rst.values[0] = lhs.values[0] * rhs;
-        rst.values[1] = lhs.values[1] * rhs;
-        rst.values[2] = lhs.values[2] * rhs;
-        
-        return rst;
+        return Position(lhs.values[0] * rhs, lhs.values[1] * rhs, lhs.values[2] * rhs);
     };
     
     friend Position operator*(float lhs, Position rhs){
-        Position rst;
-        rst.values[0] = rhs.values[0] * lhs;
-        rst.values[1] = rhs.values[1] * lhs;
-        rst.values[2] = rhs.values[2] * lhs;
-        
-        return rst;
+        return Position(rhs.values[0] * lhs, rhs.values[1] * lhs, rhs.values[2] * lhs);
     };
     
     friend Position operator/(Position lhs, float rhs){
-        Position rst;
-        rst.values[0] = lhs.values[0] / rhs;
-        rst.values[1] = lhs.values[1] / rhs;
-        rst.values[2] = lhs.values[2] / rhs;
-        
-        return rst;
+        return Position(lhs.values[0] / rhs, lhs.values[1] / rhs, lhs.values[2] / rhs);
     };
     
 };

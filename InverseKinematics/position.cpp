@@ -26,8 +26,8 @@ Position::Position(float point[]) {
 
 Position::Position( const Position& other ) {
     values[0] = other.values[0];
-  		values[1] = other.values[1];
-  		values[2] = other.values[2];
+    values[1] = other.values[1];
+  	values[2] = other.values[2];
 }
 
 
@@ -48,22 +48,16 @@ float Position::getZ() {
 }
 
 float Position::getDistance() {
-    return sqrt(pow(values[0], 2)
-                + pow(values[1], 2)
-                + pow(values[2], 2));
+    return sqrt(pow(values[0], 2) + pow(values[1], 2) + pow(values[2], 2));
 }
 
 float Position::Distance(Position lhs, Position rhs) {
     Position dist = rhs -lhs;
-    return sqrt(pow(dist.values[0], 2)
-                + pow(dist.values[1], 2)
-                + pow(dist.values[2], 2));
+    return sqrt(pow(dist.values[0], 2) + pow(dist.values[1], 2) + pow(dist.values[2], 2));
 }
 
 void Position::normalize() {
-    float length = sqrt(pow(values[0], 2)
-                        + pow(values[1], 2)
-                        + pow(values[2], 2));
+    float length = sqrt(pow(values[0], 2) + pow(values[1], 2) + pow(values[2], 2));
     values[0] = values[0] / length;
     values[1] = values[1] / length;
     values[2] = values[2] / length;
@@ -71,30 +65,30 @@ void Position::normalize() {
 
 Position& Position::operator+=(const Position& rhs) {
     // actual addition of rhs to *this
-  		this->values[0] += rhs.values[0];
-  		this->values[1] += rhs.values[1];
-  		this->values[2] += rhs.values[2];
+    this->values[0] += rhs.values[0];
+  	this->values[1] += rhs.values[1];
+  	this->values[2] += rhs.values[2];
     return *this;
 }
 
 Position& Position::operator-=(const Position& rhs) {
     // actual addition of rhs to *this
-  		this->values[0] -= rhs.values[0];
-  		this->values[1] -= rhs.values[1];
-  		this->values[2] -= rhs.values[2];
+  	this->values[0] -= rhs.values[0];
+  	this->values[1] -= rhs.values[1];
+  	this->values[2] -= rhs.values[2];
     return *this;
 }
 
 
 Position& Position::operator=(const Position& rhs) {
     this->values[0] = rhs.values[0];
-  		this->values[1] = rhs.values[1];
-  		this->values[2] = rhs.values[2];
-  		return *this;
+  	this->values[1] = rhs.values[1];
+  	this->values[2] = rhs.values[2];
+  	return *this;
 }
 
 bool Position::operator == (const Position &rhs) const {
- 	 	return (this->values[0] == rhs.values[0] &&
-                this->values[1] == rhs.values[1] &&
-                this->values[2] == rhs.values[2]);
+    return (this->values[0] == rhs.values[0] &&
+            this->values[1] == rhs.values[1] &&
+            this->values[2] == rhs.values[2]);
 }

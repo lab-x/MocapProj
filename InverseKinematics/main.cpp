@@ -40,7 +40,7 @@ void generateLinks() {
     Position p1(0, 10, 10);
     Position p2(0, 20, 10);
     Position p3(0, 30, 10);
-    Position goal(0, 3, 38);
+    Position goal(0, 3, 68);
     
     Axis AxisInit;
 
@@ -76,11 +76,11 @@ int main(int argc, const char * argv[]) {
     
     Vector3 A(1,0,0);
     Vector3 B(0,1,0);
-    //float b = 4;
-    //Vector3 a = A*b;
+    //Vector3 C(0,0,1);
+    //C = Vector3::cross(A, B);    //float b = 4;
+    //Vector3 a =cs A*b;
     //printf("%lf  %lf  %lf \n",a.getX(),a.getY(),a.getZ());
-    q3 = Quaternion::v2q(A,B);
-    printf("%lf  %lf  %lf  %lf\n",q3.getW(),q3.getX(),q3.getY(),q3.getZ());
+    //q3 = Quaternion::v2q(A,B);
     
     
     

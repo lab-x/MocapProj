@@ -6,13 +6,15 @@
 //  Copyright (c) 2015 MengTsao. All rights reserved.
 //
 
-#include <vector>
+#include "vector3.h"
 #include <iostream>
 #include <fstream>
 #include <cmath>
 #include <stdlib.h>
 #include "point.h"
+#include "axis.h"
 #include "fabrik.h"
+
 
 Fabrik::Fabrik(float tolerance, float eps) {
     tol = tolerance;
@@ -44,18 +46,19 @@ Point* Fabrik::getJoints() {
 // Fixes the out-of-reach problem.  Forces the last link to maintain its length,
 // going as close as possible toward the goal.
 
-/*void Fabrik::shrinkEnd() {
-    float dCalc = (joints[3] - joints[2]).getDistance();
+void Fabrik::shrinkEnd() {
+    float dCalc = (joints[3].getPosition() - joints[2].getPosition()).getDistance();
     float dExact = d[2];
     
     if (dCalc - dExact > 0.0001 || dCalc - dExact < -0.0001) {
-        Point vector = goal - joints[3];
+        Position vector(goal.getPosition() - joints[3].getPosition());
         vector.normalize();
         double factor = dExact / vector.getDistance();
-        joints[4] = joints[3] + (vector * factor);
+        joints[4].setPosition(joints[3].getPosition()+vector*factor);
+        //joints[4] = joints[3] + (vector * factor);
         goal = joints[4];
     }
-}*/
+}
 
 
 //Use previous point's orientation to build up position constraint area and cut a segment with proper length
@@ -69,9 +72,6 @@ void Fabrik::Orientation_Constraint(Point ThisJP, Point PrevJP){
 void Fabrik::Position_Constraint(Point ThisJP, Point PrevJP){
     
 }
-
-
-
 
 
 // Uses the FABRIK algorithm to compute IK.
@@ -91,10 +91,7 @@ void Fabrik::compute() {
         for (int i = 0; i < 3; i++) {
             r = (goal.getPosition() - joints[i].getPosition()).getDistance();
             lambda = d[i] / r;
-            Position P =(1-lambda) * joints[i].getPosition() + lambda * goal.getPosition();
-            Axis A = joints[i].getAxis();
-            Point tmp(P,A);
-            joints[i+1] = tmp;           // joints[i+1] = (1-lambda) * joints[i] + lambda * goal;
+            joints[i+1].setPosition((1-lambda) * joints[i].getPosition() + lambda * goal.getPosition());         // joints[i+1] = (1-lambda) * joints[i] + lambda * goal;
         }
     }
     else {
@@ -113,8 +110,8 @@ void Fabrik::compute() {
                 float r = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
                 float lambda = d[i] / r;
                 //Final Joint[i];
-                Point tmp(((1-lambda) * joints[i+1].getPosition()) + (lambda * joints[i].getPosition()), joints[i].getAxis());
-                joints[i] = tmp; //((1-lambda) * joints[i+1]) + (lambda * joints[i]);
+                //joints[i] = ((1-lambda) * joints[i+1]) + (lambda * joints[i]);
+                joints[i].setPosition((1-lambda) * joints[i+1].getPosition() + lambda * joints[i].getPosition());
                 
 //After we got the position of new Pi, we apply the previous orientation[X, Y, Z] on that point and we check the oritation boundary, then apply the new orientation satisfied the constraint.
                 
@@ -130,8 +127,9 @@ void Fabrik::compute() {
             for (int i = 0; i < n-1; i++) {
                 float r = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
                 float lambda = d[i] / r;
-                Point tmp(((1-lambda) * joints[i].getPosition()) + (lambda * joints[i+1].getPosition()), joints[i+1].getAxis());
-                joints[i+1] = tmp; //((1-lambda) * joints[i]) + (lambda * joints[i+1]);
+                joints[i+1].setPosition((1-lambda) * joints[i].getPosition() + lambda * joints[i+1].getPosition());
+                 
+                //joints[i+1] = ((1-lambda) * joints[i]) + (lambda * joints[i+1]);
             }
             difA = (joints[n].getPosition() - t.getPosition()).getDistance();
         }

@@ -8,6 +8,13 @@
 
 #include "quaternion.h"
 #include "vector3.h"
+Quaternion::Quaternion(){
+    values[0] = 1;
+    values[1] = 0;
+    values[2] = 0;
+    values[3] = 0;
+
+}
 Quaternion::Quaternion(float w, float x, float y, float z) {
     values[0] = w;
     values[1] = x;
@@ -28,6 +35,17 @@ Quaternion::Quaternion( const Quaternion& other ) {
   	values[2] = other.values[2];
   	values[3] = other.values[3];
 }
+
+
+Quaternion& Quaternion::operator=(const Quaternion& rhs) {
+    this->values[0] = rhs.values[0];
+  	this->values[1] = rhs.values[1];
+    this->values[2] = rhs.values[2];
+    this->values[3] = rhs.values[3];
+  	return *this;
+}
+
+
 
 float Quaternion::getW() {
     return values[0];
@@ -55,7 +73,7 @@ void Quaternion::normalize() {
     values[3] = values[3] / length;
 }
 
-Quaternion Quaternion::v2q(Vector3& vec1, Vector3& vec2)
+Quaternion Quaternion::v2q(Vector3 vec1, Vector3 vec2)
 {
     Vector3 V1 = Vector3::Normalize(vec1);
     Vector3 V2 = Vector3::Normalize(vec2);
@@ -64,11 +82,9 @@ Quaternion Quaternion::v2q(Vector3& vec1, Vector3& vec2)
     float half_sin = sqrt(0.5f * (1.f - cos_theta));
     Vector3 Cross = Vector3::cross(V1, V2);
     Vector3 w = Vector3::Normalize(Cross);
-    return Quaternion(half_cos,
-                      half_sin * w.getX(),
-                      half_sin * w.getY(),
-                      half_sin * w.getZ());
+    return Quaternion(half_cos, half_sin * w.getX(), half_sin * w.getY(), half_sin * w.getZ());
 }
+
 Quaternion Quaternion::conjugate(Quaternion q1)
 {
     return Quaternion(q1.getW(), -q1.getX(), -q1.getY(), -q1.getZ());

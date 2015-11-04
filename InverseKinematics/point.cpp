@@ -8,6 +8,10 @@
 
 
 #include "point.h"
+Point::Point(){
+    position = Position();
+    axis = Axis();
+}
 
 Point::Point(Position P, Axis A) {
     position = P;
@@ -23,15 +27,7 @@ Point::Point( const Point& other ) {
     position = other.position;
     axis = other.axis;
 }
-
-Position Point::getPosition() {
-    return position;
-}
-
-Axis Point::getAxis() {
-    return axis;
-}
-//Axis Point::setAxis(Axis a) {
+ //Axis Point::setAxis(Axis a) {
 //
 //}
 
@@ -40,3 +36,20 @@ Point& Point::operator=(const Point& rhs) {
   		this->axis = rhs.axis;
   		return *this;
 }
+
+Position Point::getPosition(){
+    return this->position;
+}
+
+Axis Point::getAxis(){
+    return this->axis;
+}
+
+void Point::setPosition(Position rhs){
+    this->position = rhs;
+}
+
+void Point::setAxis(Axis rhs){
+    this->axis = rhs;
+}
+

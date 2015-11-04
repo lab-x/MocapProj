@@ -22,18 +22,22 @@ class Point {
     Axis     axis;
 //call public :
 public:
-    Point() {}
-    Point(Position P, Axis A);
-    
-    Point(Point point[]);
-    Point(const Point& other );
-    
     Position getPosition();
     Axis getAxis();
+    void setPosition(Position rhs);
+    void setAxis(Axis rhs);
+
+public:
+    Point();
+    Point(Position P, Axis A);
+    Point(Point point[]);
+    Point(const Point& other );
+    Point& operator=(const Point& rhs);
+    
+    
     
    // Point setPosition(Position P);
    // Point setAxis(Axis A);
-    Point& operator=(const Point& rhs);
     
 };
 
