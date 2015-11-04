@@ -62,19 +62,20 @@ void Fabrik::shrinkEnd() {
 }
 
 
-void Fabrik::SetOrientation(Point This, Point Previous){
+void Fabrik::SetOrientation(Point &This, Point Previous){
     Axes tmp;
     Position X(This.getPosition() - Previous.getPosition());
     X.normalize();
     //Bone Vector AxisX
     //ForwardStage: segment<p[i+1],p[i]> / BackwardStage: segment<p[i-1],p[i]>
     Vector3 AxisX(X.getX(),X.getY(),X.getZ());
+    
     Quaternion Rotor = Quaternion::v2q(This.getAxes().GetXAxis(), AxisX);
     Vector3 AxisY(Quaternion::rotVbyQ(This.getAxes().GetYAxis(), Rotor));
     Vector3 AxisZ(Quaternion::rotVbyQ(This.getAxes().GetZAxis(), Rotor));
     Axes axes(AxisX,AxisY,AxisZ);
     This.setAxes(axes);
-    Position_Constraint(This, Previous);
+    Orientation_Constraint(This, Previous);
 }
 
 //Use previous point's orientation to build up position constraint area and cut a segment with proper length
@@ -87,17 +88,18 @@ void Fabrik::SetOrientation(Point This, Point Previous){
  ARE THE AXES VALUE SET INTO POINT 'THIS'?
  MAY angleY angleZ BE THE SAME?
  SELECT BOUNDARY TO DECIDE q1?
+ 
+ Quaternion Rotor(q1 * invRotor);//MAY BE WRONG
  --------- --------- ---------*/
 
-void Fabrik::Orientation_Constraint(Point This, Point Previous){
+void Fabrik::Orientation_Constraint(Point &This, Point Previous){
     float epsilon = 0.001;
     float boundary;
     //Check Colinear
     Vector3 X_cur(This.getAxes().GetXAxis());
     Vector3 Y_cur(This.getAxes().GetYAxis());
-    Vector3 Z_cur(This.getAxes().GetZAxis());
+                                                    //   Vector3 Z_cur(This.getAxes().GetZAxis());
     Vector3 X_pre(Previous.getAxes().GetXAxis());
-    
     Vector3 Y_pre(Previous.getAxes().GetYAxis());
     Vector3 Z_pre(Previous.getAxes().GetZAxis());
     Vector3 cross(Vector3::cross(X_cur, X_pre));
@@ -141,7 +143,7 @@ void Fabrik::Orientation_Constraint(Point This, Point Previous){
 
 }
 
-void Fabrik::Position_Constraint(Point This, Point Previous){
+void Fabrik::Position_Constraint(Point &This, Point Previous){
     
 }
 
@@ -163,7 +165,8 @@ void Fabrik::compute() {
         for (int i = 0; i < 3; i++) {
             r = (goal.getPosition() - joints[i].getPosition()).getDistance();
             lambda = d[i] / r;
-            joints[i+1].setPosition((1-lambda) * joints[i].getPosition() + lambda * goal.getPosition());         // joints[i+1] = (1-lambda) * joints[i] + lambda * goal;
+            joints[i+1].setPosition((1-lambda) * joints[i].getPosition() + lambda * goal.getPosition());
+            // joints[i+1] = (1-lambda) * joints[i] + lambda * goal;
         }
     }
     else {
