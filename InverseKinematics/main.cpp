@@ -85,7 +85,7 @@ int main(int argc, const char * argv[]) {
     printf("%lf  %lf  %lf  %lf\n",q3.getW(),q3.getX(),q3.getY(),q3.getZ());
     
     Vector3 A(1,0,0);
-    Vector3 B(-1,0,0);
+    Vector3 B(0,1,0);
     // q3 helps rotate A to B
     q3 = Quaternion::v2q(A,B);
     // then apply q to A should result in B
