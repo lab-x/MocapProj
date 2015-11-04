@@ -5,7 +5,6 @@
 //  Created by MengTsao on 2/11/15.
 //  Copyright (c) 2015 MengTsao. All rights reserved.
 //
-
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -61,6 +60,7 @@ void generateLinks() {
 int main(int argc, const char * argv[]) {
     // insert code here...
     
+    //FABRIK PART...
     generateLinks();
     fabrik.compute();
     Point* joints = fabrik.getJoints();
@@ -73,22 +73,24 @@ int main(int argc, const char * argv[]) {
         printf("Axis-Y:  %lf  %lf  %lf \n",joints[i].getAxes().GetYAxis().getX(),joints[i].getAxes().GetYAxis().getY(),joints[i].getAxes().GetYAxis().getZ());
         printf("Axis-Z:  %lf  %lf  %lf \n\n",joints[i].getAxes().GetZAxis().getX(),joints[i].getAxes().GetZAxis().getY(),joints[i].getAxes().GetZAxis().getZ());
     }
+    //GENERATE  WORLD QUATERNIONS.
+    //GENERATE EULER ANGLES AND FORM .bvh FOMAT.
     
-    
-/* Test Funcions:
+
+/* ---- ----- ----
+ Test Funcions:
     Quaternion q1(0.707,0.707,0,0);
     Quaternion q2(0.707,0, 0.707,0);
     Quaternion q3 = q1*q2;
     printf("%lf  %lf  %lf  %lf\n",q3.getW(),q3.getX(),q3.getY(),q3.getZ());
     
     Vector3 A(1,0,0);
-    Vector3 B(0,1,0);
-    //Vector3 C(0,0,1);
-    //C = Vector3::cross(A, B);    //float b = 4;
-    //Vector3 a =cs A*b;
-    //printf("%lf  %lf  %lf \n",a.getX(),a.getY(),a.getZ());
-    //q3 = Quaternion::v2q(A,B);
-*/
-    
+    Vector3 B(-1,0,0);
+    // q3 helps rotate A to B
+    q3 = Quaternion::v2q(A,B);
+    // then apply q to A should result in B
+    Vector3 C(Quaternion::rotVbyQ(A, q3));
+    printf("%lf  %lf  %lf \n", C.getX(), C.getY(), C.getZ());
+ ---- ----- ---- */
     return 0;
 }

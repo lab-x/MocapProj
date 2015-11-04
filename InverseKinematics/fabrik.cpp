@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "point.h"
 #include "axes.h"
+#include "quaternion.h"
 #include "fabrik.h"
 
 
@@ -61,15 +62,44 @@ void Fabrik::shrinkEnd() {
 }
 
 
+void Fabrik::SetOrientation(Point This, Point Previous){
+    Axes tmp;
+    Position X(This.getPosition() - Previous.getPosition());
+    X.normalize();
+    //Bone Vector AxisX
+    //ForwardStage: segment<p[i+1],p[i]> / BackwardStage: segment<p[i-1],p[i]>
+    Vector3 AxisX(X.getX(),X.getY(),X.getZ());
+    Quaternion Rotor = Quaternion::v2q(This.getAxes().GetXAxis(), AxisX);
+    Vector3 AxisY(Quaternion::rotVbyQ(This.getAxes().GetYAxis(), Rotor));
+    Vector3 AxisZ(Quaternion::rotVbyQ(This.getAxes().GetZAxis(), Rotor));
+    Axes axes(AxisX,AxisY,AxisZ);
+    This.setAxes(axes);
+    Position_Constraint(This, Previous);
+}
+
 //Use previous point's orientation to build up position constraint area and cut a segment with proper length
 //Position Constraint --> get joint[i]  //find the line(L) passing through Pi+1 and Pi
 //fitch the segment on L that satisfied the distance constraint (expressed by di)
-
-void Fabrik::Orientation_Constraint(Point ThisJP, Point PrevJP){
+void Fabrik::Orientation_Constraint(Point This, Point Previous){
+    //Check Colinear
+    Vector3 X_cur(This.getAxes().GetXAxis());
+    Vector3 X_pre(Previous.getAxes().GetXAxis());
+    Vector3 cross(Vector3::cross(X_cur, X_pre));
+    float epsilon = 0.001;
+    //nonlinear
+    if(Vector3::Getlen(cross) > epsilon){
+        Quaternion rotor(Quaternion::v2q(X_cur, X_pre));
+        
+    }
+    //colinear  --> calculate angle
+    else{
+    }
+    //
+ 
     
 }
 
-void Fabrik::Position_Constraint(Point ThisJP, Point PrevJP){
+void Fabrik::Position_Constraint(Point This, Point Previous){
     
 }
 

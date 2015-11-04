@@ -31,6 +31,8 @@ public:
     void shrinkEnd();
     void Position_Constraint(Point ThisJP, Point PrevJP);
     void Orientation_Constraint(Point ThisJP, Point PrevJP);
+    void SetOrientation(Point This, Point Previous);
+
 };
 
 

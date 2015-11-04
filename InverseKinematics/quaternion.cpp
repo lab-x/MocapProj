@@ -73,6 +73,12 @@ void Quaternion::normalize() {
     values[3] = values[3] / length;
 }
 
+/* --------- --------- ---------
+ Known Bug Case:
+ Vector3 A(1,0,0);
+ Vector3 B(-1,0,0);
+ result in (0.00 nan nan nan)!
+ --------- --------- ---------*/
 Quaternion Quaternion::v2q(Vector3 vec1, Vector3 vec2)
 {
     Vector3 V1 = Vector3::Normalize(vec1);
@@ -83,6 +89,24 @@ Quaternion Quaternion::v2q(Vector3 vec1, Vector3 vec2)
     Vector3 Cross = Vector3::cross(V1, V2);
     Vector3 w = Vector3::Normalize(Cross);
     return Quaternion(half_cos, half_sin * w.getX(), half_sin * w.getY(), half_sin * w.getZ());
+}
+
+Vector3 Quaternion::rotVbyQ(Vector3 v, Quaternion q)
+{
+    //Shall be same as the following
+    // vector part of the quaternion
+    /*Vector3 u(q.getX(),q.getY(),q.getZ());
+    // scalar part of the quaternion
+    float s = q.getW();
+    Vector3 vprime(u * 2.0f * Vector3::Dot(u, v) + v*(s*s - Vector3::Dot(u, u)) + Vector3::cross(u, v) * 2.0f * s);
+    return vprime;
+    */
+     Quaternion invq = Quaternion::conjugate(q);
+     Quaternion V(0, v.getX(), v.getY(), v.getZ());
+     Quaternion tmp1 = q*V;
+     Quaternion tmp = tmp1*invq;
+     Vector3 ret(tmp.getX(), tmp.getY(), tmp.getZ());
+    return ret;
 }
 
 Quaternion Quaternion::conjugate(Quaternion q1)

@@ -47,6 +47,7 @@ public:
     };
 
 public :
+    static Vector3 rotVbyQ(Vector3 v, Quaternion q);
     static Quaternion v2q(Vector3 vec1, Vector3 vec2);
     static Quaternion conjugate(Quaternion q1);
 };
