@@ -5,11 +5,6 @@
 //  Created by MengTsao on 3/11/15.
 //  Copyright (c) 2015 MengTsao. All rights reserved.
 //
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <stdlib.h> 
 
 #include "vector3.h"
 

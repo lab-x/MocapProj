@@ -12,7 +12,7 @@
 #include <cmath>
 #include <stdlib.h>
 #include "point.h"
-#include "axis.h"
+#include "axes.h"
 #include "fabrik.h"
 
 

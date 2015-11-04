@@ -15,29 +15,24 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "position.h"
-#include "axis.h"
+#include "axes.h"
 
 class Point {
     Position position;
-    Axis     axis;
+    Axes     axes;
 //call public :
 public:
     Position getPosition();
-    Axis getAxis();
+    Axes getAxes();
     void setPosition(Position rhs);
-    void setAxis(Axis rhs);
+    void setAxes(Axes rhs);
 
 public:
     Point();
-    Point(Position P, Axis A);
+    Point(Position P, Axes A);
     Point(Point point[]);
     Point(const Point& other );
     Point& operator=(const Point& rhs);
-    
-    
-    
-   // Point setPosition(Position P);
-   // Point setAxis(Axis A);
     
 };
 

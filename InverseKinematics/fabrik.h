@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include "point.h"
-#include "axis.h"
+#include "axes.h"
 
 
 class Fabrik {

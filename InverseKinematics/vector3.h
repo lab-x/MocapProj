@@ -8,7 +8,8 @@
 
 #ifndef __InverseKinematics__vector3__
 #define __InverseKinematics__vector3__
-
+ 
+#include <stdlib.h>
 #include <stdio.h>
 #include <cmath> 
 

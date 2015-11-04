@@ -42,13 +42,16 @@ void generateLinks() {
     Position p3(0, 30, 10);
     Position goal(0, 3, 68);
     
-    Axis AxisInit;
-
-    Point P0(p0, AxisInit);
-    Point P1(p1, AxisInit);
-    Point P2(p2, AxisInit);
-    Point P3(p3, AxisInit);
-    Point GOAL(goal, AxisInit);
+    Axes AxesInit;
+//    printf("%lf  %lf  %lf \n",AxesInit.GetXAxis().getX(),AxesInit.GetXAxis().getY(),AxesInit.GetXAxis().getZ());
+//    printf("%lf  %lf  %lf \n",AxesInit.GetYAxis().getX(),AxesInit.GetYAxis().getY(),AxesInit.GetYAxis().getZ());
+//    printf("%lf  %lf  %lf \n",AxesInit.GetZAxis().getX(),AxesInit.GetZAxis().getY(),AxesInit.GetZAxis().getZ());
+    
+    Point P0(p0, AxesInit);
+    Point P1(p1, AxesInit);
+    Point P2(p2, AxesInit);
+    Point P3(p3, AxesInit);
+    Point GOAL(goal, AxesInit);
     
     fabrik.setGoal(GOAL);
     fabrik.setJoints(P0,P1,P2,P3);
@@ -59,16 +62,20 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     
     generateLinks();
-    
     fabrik.compute();
-    
-    
     Point* joints = fabrik.getJoints();
     
     for (int i = 0; i < jointNum; i++) {
         
-        printf("%lf,%lf,%lf\n",joints[i].getPosition().getValues()[0],joints[i].getPosition().getValues()[1],joints[i].getPosition().getValues()[2]);
+        printf("joint %d \nPosition:%lf,%lf,%lf\n",i,joints[i].getPosition().getValues()[0],joints[i].getPosition().getValues()[1],joints[i].getPosition().getValues()[2]);
+        
+        printf("Axis-X:  %lf  %lf  %lf \n",joints[i].getAxes().GetXAxis().getX(),joints[i].getAxes().GetXAxis().getY(),joints[i].getAxes().GetXAxis().getZ());
+        printf("Axis-Y:  %lf  %lf  %lf \n",joints[i].getAxes().GetYAxis().getX(),joints[i].getAxes().GetYAxis().getY(),joints[i].getAxes().GetYAxis().getZ());
+        printf("Axis-Z:  %lf  %lf  %lf \n\n",joints[i].getAxes().GetZAxis().getX(),joints[i].getAxes().GetZAxis().getY(),joints[i].getAxes().GetZAxis().getZ());
     }
+    
+    
+/* Test Funcions:
     Quaternion q1(0.707,0.707,0,0);
     Quaternion q2(0.707,0, 0.707,0);
     Quaternion q3 = q1*q2;
@@ -81,8 +88,7 @@ int main(int argc, const char * argv[]) {
     //Vector3 a =cs A*b;
     //printf("%lf  %lf  %lf \n",a.getX(),a.getY(),a.getZ());
     //q3 = Quaternion::v2q(A,B);
-    
-    
+*/
     
     return 0;
 }

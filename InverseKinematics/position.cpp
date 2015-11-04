@@ -5,10 +5,6 @@
 //  Created by MengTsao on 3/11/15.
 //  Copyright (c) 2015 MengTsao. All rights reserved.
 //
-#include <iostream>
-#include <cmath>
-#include <stdlib.h>
-
 #include "position.h"
 
 

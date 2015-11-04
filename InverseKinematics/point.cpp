@@ -6,34 +6,31 @@
 //  Copyright (c) 2015 MengTsao. All rights reserved.
 //
 
-
 #include "point.h"
 Point::Point(){
     position = Position();
-    axis = Axis();
+    axes = Axes();
 }
 
-Point::Point(Position P, Axis A) {
+Point::Point(Position P, Axes A) {
     position = P;
-    axis = A;
+    axes = A;
 }
 
 Point::Point(Point point[]) {
     position = point->position;
-    axis = point->axis;
+    axes = point->axes;
 }
 
 Point::Point( const Point& other ) {
     position = other.position;
-    axis = other.axis;
+    axes = other.axes;
 }
- //Axis Point::setAxis(Axis a) {
-//
-//}
+
 
 Point& Point::operator=(const Point& rhs) {
         this->position = rhs.position;
-  		this->axis = rhs.axis;
+  		this->axes = rhs.axes;
   		return *this;
 }
 
@@ -41,15 +38,15 @@ Position Point::getPosition(){
     return this->position;
 }
 
-Axis Point::getAxis(){
-    return this->axis;
+Axes Point::getAxes(){
+    return this->axes;
 }
 
 void Point::setPosition(Position rhs){
     this->position = rhs;
 }
 
-void Point::setAxis(Axis rhs){
-    this->axis = rhs;
+void Point::setAxes(Axes rhs){
+    this->axes = rhs;
 }
 

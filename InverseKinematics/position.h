@@ -9,6 +9,8 @@
 #ifndef __InverseKinematics__position__
 #define __InverseKinematics__position__
 
+#include <cmath>
+#include <stdlib.h>
 #include <stdio.h>
 #include "vector3.h"
 

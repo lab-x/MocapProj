@@ -6,42 +6,42 @@
 //  Copyright (c) 2015 MengTsao. All rights reserved.
 //
 
-#include "axis.h"
+#include "axes.h"
 
 
-Axis::Axis(){
+Axes::Axes(){
     axis[0] = Vector3(1,0,0);
     axis[1] = Vector3(0,1,0);
     axis[2] = Vector3(0,0,1);
     
 }
-Axis::Axis(Vector3 X, Vector3 Y, Vector3 Z){
+Axes::Axes(Vector3 X, Vector3 Y, Vector3 Z){
     axis[0] = X;
     axis[1] = Y;
     axis[2] = Z;
 }
 
-Axis::Axis(Axis& other){
+Axes::Axes(Axes& other){
     axis[0] = other.axis[0];
     axis[1] = other.axis[1];
     axis[2] = other.axis[2];
 }
 
-Axis& Axis::operator=(const Axis& rhs) {
+Axes& Axes::operator=(const Axes& rhs) {
     this->axis[0] = rhs.axis[0];
     this->axis[1] = rhs.axis[1];
     this->axis[2] = rhs.axis[2];
     return *this;
 }
 
-Vector3 Axis::GetXAxis() {
+Vector3 Axes::GetXAxis() {
     return axis[0];
 }
 
-Vector3 Axis::GetYAxis() {
+Vector3 Axes::GetYAxis() {
     return axis[1];
 }
 
-Vector3 Axis::GetZAxis() {
+Vector3 Axes::GetZAxis() {
     return axis[2];
 }
