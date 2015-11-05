@@ -39,7 +39,7 @@ void generateLinks() {
     Position p1(0, 10, 10);
     Position p2(0, 20, 10);
     Position p3(0, 30, 10);
-    Position goal(0, 3, 68);
+    Position goal(0, 3, 38);
     
     Axes AxesInit;
 //    printf("%lf  %lf  %lf \n",AxesInit.GetXAxis().getX(),AxesInit.GetXAxis().getY(),AxesInit.GetXAxis().getZ());
@@ -74,6 +74,8 @@ int main(int argc, const char * argv[]) {
         printf("Axis-Z:  %lf  %lf  %lf \n\n",joints[i].getAxes().GetZAxis().getX(),joints[i].getAxes().GetZAxis().getY(),joints[i].getAxes().GetZAxis().getZ());
     }
     //GENERATE  WORLD QUATERNIONS.
+   
+    
     //GENERATE EULER ANGLES AND FORM .bvh FOMAT.
     
 

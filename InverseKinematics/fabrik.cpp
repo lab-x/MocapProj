@@ -77,24 +77,9 @@ void Fabrik::SetOrientation(Point &This, Point Previous){
     This.setAxes(axes);
     Orientation_Constraint(This, Previous);
 }
-
-//Use previous point's orientation to build up position constraint area and cut a segment with proper length
-//Position Constraint --> get joint[i]  //find the line(L) passing through Pi+1 and Pi
-//fitch the segment on L that satisfied the distance constraint (expressed by di)
-
-/* --------- --------- ---------
- REMAINING PROBLEMS:
- HOW TO PASS BOUNDARY VALUE INTO THIS FUNC?
- ARE THE AXES VALUE SET INTO POINT 'THIS'?
- MAY angleY angleZ BE THE SAME?
- SELECT BOUNDARY TO DECIDE q1?
- 
- Quaternion Rotor(q1 * invRotor);//MAY BE WRONG
- --------- --------- ---------*/
-
 void Fabrik::Orientation_Constraint(Point &This, Point Previous){
     float epsilon = 0.001;
-    float boundary;
+    float boundary = 180;
     //Check Colinear
     Vector3 X_cur(This.getAxes().GetXAxis());
     Vector3 Y_cur(This.getAxes().GetYAxis());
@@ -143,10 +128,72 @@ void Fabrik::Orientation_Constraint(Point &This, Point Previous){
 
 }
 
-void Fabrik::Position_Constraint(Point &This, Point Previous){
-    
-}
+//Use previous point's orientation to build up position constraint area and cut a segment with proper length
+//Position Constraint --> get joint[i]  //find the line(L) passing through Pi+1 and Pi
+//fitch the segment on L that satisfied the distance constraint (expressed by di)
+/* --------- --------- ---------
+ REMAINING PROBLEMS:
+ HOW TO PASS BOUNDARY VALUE INTO THIS FUNC?
+ ARE THE AXES VALUE SET INTO POINT 'THIS'?
+ MAY angleY angleZ BE THE SAME?
+ SELECT BOUNDARY TO DECIDE q1?
+ Quaternion Rotor(q1 * invRotor);//MAY BE WRONG
+ --------- --------- ---------*/
 
+void Fabrik::Rotation_Constraint(Point &This, Point Previous, Axes PprevAxes){
+// Assuming the rotational constraint only applies on X axis, in another word, relation between two linked bones.
+    float Bound1,Bound2,Bound3,Bound4;
+    float theta1,theta2;
+    // the BASE COORDINATE of PREVIOUS JOINT
+    Vector3 AxisX(PprevAxes.GetXAxis());
+    Vector3 AxisY(PprevAxes.GetYAxis());
+    Vector3 AxisZ(PprevAxes.GetZAxis());
+    Position Origin = Previous.getPosition();       //Set PrevPoint as Origin
+    Position bone(This.getPosition() - Origin);
+    Vector3 BONE(bone.getX(),bone.getY(),bone.getZ());
+    //Project BONE on XYZ axes.
+    float x = Vector3::Dot(BONE, AxisX);
+    float y = Vector3::Dot(BONE, AxisY);
+    float z = Vector3::Dot(BONE, AxisZ);
+    //Project BONE into X-Y & X-Z planes.
+    Position Pxy(x,y,0);
+    Position Pxz(x,0,z);
+    //  theta can't be 90, othewise the tangent value would be infinite.
+   
+    if(x){
+        theta1 = atanf(y/x);   //Rot around Y
+        theta2 = atanf(z/x);    //Rot around Z
+    }
+    else{
+        theta1 = 90;
+        theta2 = 90;
+    }
+    if (theta1 > Bound1)
+        theta1 = Bound1;
+    if (theta1 < Bound2)
+        theta1 = Bound2;
+    if (theta2 > Bound3)
+        theta2 = Bound3;
+    if (theta2 < Bound4)
+        theta2 = Bound4;
+    
+    
+    float Scalar = bone.getDistance();
+    Vector3 tmp0 = AxisX * Scalar;
+    
+    //RotRoundZ theta1
+    float S1 = sin(theta1/2);
+    Quaternion RotRoundZ(theta1/2, S1*AxisZ.getX(), S1*AxisZ.getY(), S1*AxisZ.getZ());
+    //RotRoundY theta2
+    float S2 = sin(theta2/2);
+    Quaternion RotRoundY(theta2/2, S2*AxisY.getX(), S2*AxisY.getY(), S2*AxisY.getZ());
+ 
+    Vector3 tmp1 = Quaternion::rotVbyQ(tmp0, RotRoundY);
+    Vector3 target = Quaternion::rotVbyQ(tmp1, RotRoundZ);
+    Position tar(target.getX(),target.getY(),target.getZ());
+    
+    This.setPosition(tar+Previous.getPosition());
+  }
 
 // Uses the FABRIK algorithm to compute IK.
 void Fabrik::compute() {
@@ -166,7 +213,7 @@ void Fabrik::compute() {
             r = (goal.getPosition() - joints[i].getPosition()).getDistance();
             lambda = d[i] / r;
             joints[i+1].setPosition((1-lambda) * joints[i].getPosition() + lambda * goal.getPosition());
-            // joints[i+1] = (1-lambda) * joints[i] + lambda * goal;
+            
         }
     }
     else {
@@ -174,19 +221,22 @@ void Fabrik::compute() {
         Point b = p0;
         float difA = (p3.getPosition() - t.getPosition()).getDistance();
         while (difA > tol) {
-            //STAGE ONE: Forward Reaching
+//STAGE ONE: Forward Reaching
             joints[n] = t;
-            //[Xn, Yn,Zn] = [Xt, Yt, Zt];
-            for (int i = n-1; i >= 0; i--) {
-                
+            
 //Use previous point's orientation to build up position constraint area and cut a segment with proper length
-                //Position Constraint --> get joint[i]  //find the line(L) passing through Pi+1 and Pi
-                //fitch the segment on L that satisfied the distance constraint (expressed by di)
+//Position Constraint --> get joint[i]  //find the line(L) passing through Pi+1 and Pi
+//fitch the segment on L that satisfied the distance constraint (expressed by di)
+            for (int i = n-1; i >= 0; i--) {
+                /*if(i<2){
+                 Rotation_Constraint(joints[i], joints[i+1], joints[i+2].getAxes());
+                 }*/
                 float r = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
                 float lambda = d[i] / r;
                 //Final Joint[i];
                 //joints[i] = ((1-lambda) * joints[i+1]) + (lambda * joints[i]);
                 joints[i].setPosition((1-lambda) * joints[i+1].getPosition() + lambda * joints[i].getPosition());
+                SetOrientation(joints[i], joints[i+1]);
                 
 //After we got the position of new Pi, we apply the previous orientation[X, Y, Z] on that point and we check the oritation boundary, then apply the new orientation satisfied the constraint.
                 
@@ -197,14 +247,13 @@ void Fabrik::compute() {
                 //[Xi,Yi,Zi] = constraint_orientation([Xi,Yi,Zi],[Xi+1,Yi+1,Zi+1],[Ub,LB]);
             }
             
-            //STAGE 2: Backward Reaching
+//STAGE 2: Backward Reaching
             joints[0] = b;
             for (int i = 0; i < n-1; i++) {
                 float r = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
                 float lambda = d[i] / r;
                 joints[i+1].setPosition((1-lambda) * joints[i].getPosition() + lambda * joints[i+1].getPosition());
-                 
-                //joints[i+1] = ((1-lambda) * joints[i]) + (lambda * joints[i+1]);
+                SetOrientation(joints[i+1], joints[i]);
             }
             difA = (joints[n].getPosition() - t.getPosition()).getDistance();
         }

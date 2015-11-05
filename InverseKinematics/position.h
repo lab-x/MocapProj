@@ -30,7 +30,7 @@ public:
     float getZ();
     
     float getDistance();
-    float Distance(Position lhs, Position rhs);
+    static float Distance(Position lhs, Position rhs);
     void normalize();
     
     

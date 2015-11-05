@@ -29,8 +29,8 @@ public:
     Point* getJoints();
     void compute();
     void shrinkEnd();
-    void Position_Constraint(Point& ThisJP, Point PrevJP);
-    void Orientation_Constraint(Point& ThisJP, Point PrevJP);
+    void Rotation_Constraint(Point& This, Point Prev, Axes PprevAxes);
+    void Orientation_Constraint(Point& This, Point Prev);
     void SetOrientation(Point& This, Point Previous);
 
 };
