@@ -19,17 +19,20 @@
 
 class Point {
     Position position;
-    Axes     axes;
+    Axes     BWDbasic;
+    Axes     FWDbasic;
 //call public :
 public:
     Position getPosition();
-    Axes getAxes();
+    Axes getBWDAxes();
+    Axes getFWDAxes();
+    void setBWDAxes(Axes rhs);
+    void setFWDAxes(Axes rhs);
     void setPosition(Position rhs);
-    void setAxes(Axes rhs);
-
+    
 public:
     Point();
-    Point(Position P, Axes A);
+    Point(Position P, Axes F, Axes B);
     Point(Point point[]);
     Point(const Point& other );
     Point& operator=(const Point& rhs);

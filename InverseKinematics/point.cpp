@@ -9,44 +9,52 @@
 #include "point.h"
 Point::Point(){
     position = Position();
-    axes = Axes();
+    FWDbasic = Axes();
+    BWDbasic = Axes();
 }
 
-Point::Point(Position P, Axes A) {
+Point::Point(Position P, Axes F, Axes B) {
     position = P;
-    axes = A;
+    FWDbasic = F;
+    BWDbasic = B;
 }
 
 Point::Point(Point point[]) {
     position = point->position;
-    axes = point->axes;
+    FWDbasic = point->FWDbasic;
+    BWDbasic = point->BWDbasic;
 }
 
 Point::Point( const Point& other ) {
     position = other.position;
-    axes = other.axes;
+    FWDbasic = other.FWDbasic;
+    BWDbasic = other.BWDbasic;
 }
 
 
 Point& Point::operator=(const Point& rhs) {
         this->position = rhs.position;
-  		this->axes = rhs.axes;
-  		return *this;
+  		this->FWDbasic = rhs.FWDbasic;
+        this->BWDbasic = rhs.BWDbasic;
+    return *this;
 }
 
 Position Point::getPosition(){
     return this->position;
 }
-
-Axes Point::getAxes(){
-    return this->axes;
+Axes Point::getFWDAxes(){
+    return this->FWDbasic;
+}
+Axes Point::getBWDAxes(){
+    return this->BWDbasic;
+}
+void Point::setFWDAxes(Axes rhs){
+    this->FWDbasic = rhs;
+}
+void Point::setBWDAxes(Axes rhs){
+    this->BWDbasic = rhs;
 }
 
 void Point::setPosition(Position rhs){
     this->position = rhs;
 }
-
-void Point::setAxes(Axes rhs){
-    this->axes = rhs;
-}
-

@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InverseKinematics/fabrik.cpp"
-            timestampString = "468414346.874407"
+            timestampString = "468474450.064196"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
-            landmarkName = "Fabrik::compute()"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
+            landmarkName = "Fabrik::Orientation_Constraint(Point &amp;This, Point Previous, int Type)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,44 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "InverseKinematics/fabrik.cpp"
-            timestampString = "468417544.102469"
+            timestampString = "468490965.858782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "136"
-            endingLineNumber = "136"
-            landmarkName = "Fabrik::Orientation_Constraint(Point &amp;This, Point Previous)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "InverseKinematics/fabrik.cpp"
-            timestampString = "468417556.81647"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "Fabrik::SetOrientation(Point &amp;This, Point Previous)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "InverseKinematics/fabrik.cpp"
-            timestampString = "468417611.556921"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "237"
-            endingLineNumber = "237"
-            landmarkName = "Fabrik::compute()"
+            startingLineNumber = "180"
+            endingLineNumber = "180"
+            landmarkName = "Fabrik::Rotation_Constraint(Point &amp;This, Point Previous, Axes PprevAxes)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

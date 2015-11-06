@@ -46,11 +46,11 @@ void generateLinks() {
 //    printf("%lf  %lf  %lf \n",AxesInit.GetYAxis().getX(),AxesInit.GetYAxis().getY(),AxesInit.GetYAxis().getZ());
 //    printf("%lf  %lf  %lf \n",AxesInit.GetZAxis().getX(),AxesInit.GetZAxis().getY(),AxesInit.GetZAxis().getZ());
     
-    Point P0(p0, AxesInit);
-    Point P1(p1, AxesInit);
-    Point P2(p2, AxesInit);
-    Point P3(p3, AxesInit);
-    Point GOAL(goal, AxesInit);
+    Point P0(p0, AxesInit, AxesInit);
+    Point P1(p1, AxesInit, AxesInit);
+    Point P2(p2, AxesInit, AxesInit);
+    Point P3(p3, AxesInit, AxesInit);
+    Point GOAL(goal, AxesInit, AxesInit);
     
     fabrik.setGoal(GOAL);
     fabrik.setJoints(P0,P1,P2,P3);
@@ -69,9 +69,9 @@ int main(int argc, const char * argv[]) {
         
         printf("joint %d \nPosition:%lf,%lf,%lf\n",i,joints[i].getPosition().getValues()[0],joints[i].getPosition().getValues()[1],joints[i].getPosition().getValues()[2]);
         
-        printf("Axis-X:  %lf  %lf  %lf \n",joints[i].getAxes().GetXAxis().getX(),joints[i].getAxes().GetXAxis().getY(),joints[i].getAxes().GetXAxis().getZ());
-        printf("Axis-Y:  %lf  %lf  %lf \n",joints[i].getAxes().GetYAxis().getX(),joints[i].getAxes().GetYAxis().getY(),joints[i].getAxes().GetYAxis().getZ());
-        printf("Axis-Z:  %lf  %lf  %lf \n\n",joints[i].getAxes().GetZAxis().getX(),joints[i].getAxes().GetZAxis().getY(),joints[i].getAxes().GetZAxis().getZ());
+        printf("Axis-X:  %lf  %lf  %lf \n",joints[i].getFWDAxes().GetXAxis().getX(),joints[i].getFWDAxes().GetXAxis().getY(),joints[i].getFWDAxes().GetXAxis().getZ());
+        printf("Axis-Y:  %lf  %lf  %lf \n",joints[i].getFWDAxes().GetYAxis().getX(),joints[i].getFWDAxes().GetYAxis().getY(),joints[i].getFWDAxes().GetYAxis().getZ());
+        printf("Axis-Z:  %lf  %lf  %lf \n\n",joints[i].getFWDAxes().GetZAxis().getX(),joints[i].getFWDAxes().GetZAxis().getY(),joints[i].getFWDAxes().GetZAxis().getZ());
     }
     //GENERATE  WORLD QUATERNIONS.
    

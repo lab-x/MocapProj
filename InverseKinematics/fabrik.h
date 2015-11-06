@@ -30,8 +30,8 @@ public:
     void compute();
     void shrinkEnd();
     void Rotation_Constraint(Point& This, Point Prev, Axes PprevAxes);
-    void Orientation_Constraint(Point& This, Point Prev);
-    void SetOrientation(Point& This, Point Previous);
+    void Orientation_Constraint(Point& This, Point Prev, int Type);
+    void SetOrientation(Point& This, Point Previous, int Type);
 
 };
 

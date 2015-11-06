@@ -62,31 +62,53 @@ void Fabrik::shrinkEnd() {
 }
 
 
-void Fabrik::SetOrientation(Point &This, Point Previous){
+void Fabrik::SetOrientation(Point &This, Point Previous, int Type){
     Axes tmp;
     Position X(This.getPosition() - Previous.getPosition());
     X.normalize();
     //Bone Vector AxisX
     //ForwardStage: segment<p[i+1],p[i]> / BackwardStage: segment<p[i-1],p[i]>
     Vector3 AxisX(X.getX(),X.getY(),X.getZ());
-    
-    Quaternion Rotor = Quaternion::v2q(This.getAxes().GetXAxis(), AxisX);
-    Vector3 AxisY(Quaternion::rotVbyQ(This.getAxes().GetYAxis(), Rotor));
-    Vector3 AxisZ(Quaternion::rotVbyQ(This.getAxes().GetZAxis(), Rotor));
-    Axes axes(AxisX,AxisY,AxisZ);
-    This.setAxes(axes);
-    Orientation_Constraint(This, Previous);
+    if(Type == 1)
+    {
+        Quaternion Rotor = Quaternion::v2q(This.getFWDAxes().GetXAxis(), AxisX);
+        Vector3 AxisY(Quaternion::rotVbyQ(This.getFWDAxes().GetYAxis(), Rotor));
+        Vector3 AxisZ(Quaternion::rotVbyQ(This.getFWDAxes().GetZAxis(), Rotor));
+        Axes axes(AxisX,AxisY,AxisZ);
+        This.setFWDAxes(axes);
+    }
+    else if(Type == 2)
+    {
+        Quaternion Rotor = Quaternion::v2q(This.getBWDAxes().GetXAxis(), AxisX);
+        Vector3 AxisY(Quaternion::rotVbyQ(This.getBWDAxes().GetYAxis(), Rotor));
+        Vector3 AxisZ(Quaternion::rotVbyQ(This.getBWDAxes().GetZAxis(), Rotor));
+        Axes axes(AxisX,AxisY,AxisZ);
+        This.setBWDAxes(axes);
+    }
+    Orientation_Constraint(This, Previous, Type);
 }
-void Fabrik::Orientation_Constraint(Point &This, Point Previous){
+
+void Fabrik::Orientation_Constraint(Point &This, Point Previous, int Type){
     float epsilon = 0.001;
     float boundary = 180;
     //Check Colinear
-    Vector3 X_cur(This.getAxes().GetXAxis());
-    Vector3 Y_cur(This.getAxes().GetYAxis());
-                                                    //   Vector3 Z_cur(This.getAxes().GetZAxis());
-    Vector3 X_pre(Previous.getAxes().GetXAxis());
-    Vector3 Y_pre(Previous.getAxes().GetYAxis());
-    Vector3 Z_pre(Previous.getAxes().GetZAxis());
+    Vector3 X_cur, Y_cur, X_pre, Y_pre, Z_pre;
+    if(Type == 1){
+        X_cur = This.getFWDAxes().GetXAxis();
+        Y_cur = This.getFWDAxes().GetYAxis();     //   Vector3 Z_cur(This.getAxes().GetZAxis());
+        X_pre = Previous.getFWDAxes().GetXAxis();
+        Y_pre = Previous.getFWDAxes().GetYAxis();
+        Z_pre = Previous.getFWDAxes().GetZAxis();
+        
+    }
+    else{
+        X_cur = This.getBWDAxes().GetXAxis();
+        Y_cur = This.getBWDAxes().GetYAxis();     //   Vector3 Z_cur(This.getAxes().GetZAxis());
+        X_pre = Previous.getBWDAxes().GetXAxis();
+        Y_pre = Previous.getBWDAxes().GetYAxis();
+        Z_pre = Previous.getBWDAxes().GetZAxis();
+    }
+    
     Vector3 cross(Vector3::cross(X_cur, X_pre));
     
     Vector3 tmpY;
@@ -122,10 +144,13 @@ void Fabrik::Orientation_Constraint(Point &This, Point Previous){
         Vector3 Y_new(Quaternion::rotVbyQ(Y_pre, Rotor));
         Vector3 Z_new(Quaternion::rotVbyQ(Z_pre, Rotor));
         Axes axes(X_new, Y_new, Z_new);
-        This.setAxes(axes);
-    
+        if(Type == 1){
+            This.setFWDAxes(axes);
+        }
+        else{
+            This.setBWDAxes(axes);
+        }
     }
-
 }
 
 //Use previous point's orientation to build up position constraint area and cut a segment with proper length
@@ -216,44 +241,48 @@ void Fabrik::compute() {
             
         }
     }
-    else {
 //Target reachable
+    
+    
+    //Use previous point's orientation to build up position constraint area and cut a segment with proper length
+    //Position Constraint --> get joint[i]  //find the line(L) passing through Pi+1 and Pi
+    //fitch the segment on L that satisfied the distance constraint (expressed by di)
+
+    //After we got the position of new Pi, we apply the previous orientation[X, Y, Z] on that point and we check the oritation boundary, then apply the new orientation satisfied the constraint.
+
+    else {
         Point b = p0;
         float difA = (p3.getPosition() - t.getPosition()).getDistance();
         while (difA > tol) {
-//STAGE ONE: Forward Reaching
+            //STAGE ONE: Forward Reaching
             joints[n] = t;
-            
-//Use previous point's orientation to build up position constraint area and cut a segment with proper length
-//Position Constraint --> get joint[i]  //find the line(L) passing through Pi+1 and Pi
-//fitch the segment on L that satisfied the distance constraint (expressed by di)
             for (int i = n-1; i >= 0; i--) {
-                /*if(i<2){
-                 Rotation_Constraint(joints[i], joints[i+1], joints[i+2].getAxes());
-                 }*/
+                if(i<2){
+                    Vector3 X(joints[i+2].getFWDAxes().GetXAxis());
+                    Vector3 Y(joints[i+2].getFWDAxes().GetYAxis());
+                    Vector3 Z(joints[i+2].getFWDAxes().GetZAxis());
+                    Axes axes(X,Y,Z);
+                    Rotation_Constraint(joints[i], joints[i+1],axes);
+                 }
                 float r = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
                 float lambda = d[i] / r;
-                //Final Joint[i];
-                //joints[i] = ((1-lambda) * joints[i+1]) + (lambda * joints[i]);
                 joints[i].setPosition((1-lambda) * joints[i+1].getPosition() + lambda * joints[i].getPosition());
-                SetOrientation(joints[i], joints[i+1]);
-                
-//After we got the position of new Pi, we apply the previous orientation[X, Y, Z] on that point and we check the oritation boundary, then apply the new orientation satisfied the constraint.
-                
-                //Point Xt = (joints[i+1] - joints[i])/r;
-                //float Angle = acos(<Xi,Xt>);
-                //Axis = cross(Xi,Xt);
-                //[Xi,Yi,Zi] = rotat([Xi,Yi,Zi],angle,axis);
-                //[Xi,Yi,Zi] = constraint_orientation([Xi,Yi,Zi],[Xi+1,Yi+1,Zi+1],[Ub,LB]);
+                SetOrientation(joints[i], joints[i+1], 1);
             }
-            
-//STAGE 2: Backward Reaching
+            //STAGE 2: Backward Reaching
             joints[0] = b;
             for (int i = 0; i < n-1; i++) {
+                if(i > 1){
+                    Vector3 X(joints[i-2].getBWDAxes().GetXAxis());
+                    Vector3 Y(joints[i-2].getBWDAxes().GetYAxis());
+                    Vector3 Z(joints[i-2].getBWDAxes().GetZAxis());
+                    Axes axes(X,Y,Z);
+                    Rotation_Constraint(joints[i], joints[i-1],axes);
+                }
                 float r = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
                 float lambda = d[i] / r;
                 joints[i+1].setPosition((1-lambda) * joints[i].getPosition() + lambda * joints[i+1].getPosition());
-                SetOrientation(joints[i+1], joints[i]);
+                SetOrientation(joints[i+1], joints[i], 2);
             }
             difA = (joints[n].getPosition() - t.getPosition()).getDistance();
         }
