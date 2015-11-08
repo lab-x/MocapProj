@@ -35,11 +35,16 @@ std::vector<float> endPosition[3];
 Fabrik fabrik(tolerance, epsilon);
 
 void generateLinks() {
+    /*
+    LenNeckToShoulder = 0.2f ;
+    LenShoulderToElbow = 0.2f ;
+    LenElbowToWrist = 0.2f ;
+    */
     Position p0(0.0001, 0.0001, 10);
     Position p1(0, 10, 10);
     Position p2(0, 20, 10);
     Position p3(0, 30, 10);
-    Position goal(0, 3, 38);
+    Position goal(10, 10, -10);
     
     Axes AxesInit;
 //    printf("%lf  %lf  %lf \n",AxesInit.GetXAxis().getX(),AxesInit.GetXAxis().getY(),AxesInit.GetXAxis().getZ());
@@ -53,7 +58,7 @@ void generateLinks() {
     Point GOAL(goal, AxesInit, AxesInit);
     
     fabrik.setGoal(GOAL);
-    fabrik.setJoints(P0,P1,P2,P3);
+    fabrik.setJoints(P0, P1, P2, P3);
     jointNum = 4;
 }
 
@@ -73,6 +78,8 @@ int main(int argc, const char * argv[]) {
         printf("Axis-Y:  %lf  %lf  %lf \n",joints[i].getFWDAxes().GetYAxis().getX(),joints[i].getFWDAxes().GetYAxis().getY(),joints[i].getFWDAxes().GetYAxis().getZ());
         printf("Axis-Z:  %lf  %lf  %lf \n\n",joints[i].getFWDAxes().GetZAxis().getX(),joints[i].getFWDAxes().GetZAxis().getY(),joints[i].getFWDAxes().GetZAxis().getZ());
     }
+    
+    
     //GENERATE  WORLD QUATERNIONS.
    
     

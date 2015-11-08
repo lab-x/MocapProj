@@ -167,7 +167,10 @@ void Fabrik::Orientation_Constraint(Point &This, Point Previous, int Type){
 
 void Fabrik::Rotation_Constraint(Point &This, Point Previous, Axes PprevAxes){
 // Assuming the rotational constraint only applies on X axis, in another word, relation between two linked bones.
-    float Bound1,Bound2,Bound3,Bound4;
+    float Bound1 = 60;
+    float Bound2 = 30;
+    float Bound3 = 60;
+    float Bound4 = 30;
     float theta1,theta2;
     // the BASE COORDINATE of PREVIOUS JOINT
     Vector3 AxisX(PprevAxes.GetXAxis());
@@ -217,7 +220,15 @@ void Fabrik::Rotation_Constraint(Point &This, Point Previous, Axes PprevAxes){
     Vector3 target = Quaternion::rotVbyQ(tmp1, RotRoundZ);
     Position tar(target.getX(),target.getY(),target.getZ());
     
+    
+    
+    
+    //P’i =di (new_P’i - Pi+1)/|| (new_P’i - Pi+1) ||
+    Position dist = tar - Previous.getPosition();
+    float len = sqrt(pow(dist.getX(), 2) + pow(dist.getY(), 2) + pow(dist.getZ(), 2));
+    tar = dist*(10/len); 
     This.setPosition(tar+Previous.getPosition());
+    
   }
 
 // Uses the FABRIK algorithm to compute IK.
@@ -242,8 +253,6 @@ void Fabrik::compute() {
         }
     }
 //Target reachable
-    
-    
     //Use previous point's orientation to build up position constraint area and cut a segment with proper length
     //Position Constraint --> get joint[i]  //find the line(L) passing through Pi+1 and Pi
     //fitch the segment on L that satisfied the distance constraint (expressed by di)
@@ -262,12 +271,13 @@ void Fabrik::compute() {
                     Vector3 Y(joints[i+2].getFWDAxes().GetYAxis());
                     Vector3 Z(joints[i+2].getFWDAxes().GetZAxis());
                     Axes axes(X,Y,Z);
-                    Rotation_Constraint(joints[i], joints[i+1],axes);
+                   // Rotation_Constraint(joints[i], joints[i+1],axes);
                  }
                 float r = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
                 float lambda = d[i] / r;
                 joints[i].setPosition((1-lambda) * joints[i+1].getPosition() + lambda * joints[i].getPosition());
-                SetOrientation(joints[i], joints[i+1], 1);
+                
+                //SetOrientation(joints[i], joints[i+1], 1);
             }
             //STAGE 2: Backward Reaching
             joints[0] = b;
@@ -277,12 +287,13 @@ void Fabrik::compute() {
                     Vector3 Y(joints[i-2].getBWDAxes().GetYAxis());
                     Vector3 Z(joints[i-2].getBWDAxes().GetZAxis());
                     Axes axes(X,Y,Z);
-                    Rotation_Constraint(joints[i], joints[i-1],axes);
+                  //  Rotation_Constraint(joints[i], joints[i-1],axes);
                 }
                 float r = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
                 float lambda = d[i] / r;
                 joints[i+1].setPosition((1-lambda) * joints[i].getPosition() + lambda * joints[i+1].getPosition());
-                SetOrientation(joints[i+1], joints[i], 2);
+                
+                //SetOrientation(joints[i+1], joints[i], 2);
             }
             difA = (joints[n].getPosition() - t.getPosition()).getDistance();
         }
