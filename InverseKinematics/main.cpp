@@ -9,7 +9,7 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
-#include "point.h"
+#include "joint.h"
 #include "fabrik.h"
 #include "quaternion.h"
 #include "vector3.h"
@@ -45,14 +45,15 @@ void generateLinks() {
     Position p2(20, 0, 10);
     Position p3(30, 0, 10);
     //Position goal(10, 10, -10);
-    Position goal(0, 0, 10);
+    
+    Position goal(13, 7, 2);
     Axes AxesInit;
   
-    Point P0(p0, AxesInit, AxesInit);
-    Point P1(p1, AxesInit, AxesInit);
-    Point P2(p2, AxesInit, AxesInit);
-    Point P3(p3, AxesInit, AxesInit);
-    Point GOAL(goal, AxesInit, AxesInit);
+    Joint P0(p0, AxesInit, AxesInit);
+    Joint P1(p1, AxesInit, AxesInit);
+    Joint P2(p2, AxesInit, AxesInit);
+    Joint P3(p3, AxesInit, AxesInit);
+    Joint GOAL(goal, AxesInit, AxesInit);
     
     fabrik.setGoal(GOAL);
     fabrik.setJoints(P0, P1, P2, P3);
@@ -62,10 +63,11 @@ void generateLinks() {
 int main(int argc, const char * argv[]) {
     // insert code here...
     
-    //FABRIK PART...
+//Initialization Part
     generateLinks();
+//-----------------------------LOOP
     fabrik.compute();
-    Point* joints = fabrik.getJoints();
+    Joint* joints = fabrik.getJoints();
     Vector3* Eulers = fabrik.getEulers();
     
     for (int i = 0; i < jointNum; i++) {
@@ -76,6 +78,14 @@ int main(int argc, const char * argv[]) {
         printf("bone %d \nEuler:%lf,%lf,%lf\n",i,Eulers[i].getX(),Eulers[i].getY(),Eulers[i].getZ());
         
     }
+    fabrik.setJoints(joints[0],joints[1],joints[2],joints[3]);
+    
+    Position goal(15, 10, 0);
+    Axes AxesInit;
+    Joint GOAL(goal, AxesInit, AxesInit);
+    
+    fabrik.setGoal(GOAL);
+//-----------------------------LOOPEND
     
     return 0;
 }

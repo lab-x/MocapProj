@@ -1,13 +1,13 @@
 //
-//  point.h
+//  Joint.h
 //  InverseKinematics
 //
 //  Created by MengTsao on 2/11/15.
 //  Copyright (c) 2015 MengTsao. All rights reserved.
 //
 
-#ifndef __InverseKinematics__point__
-#define __InverseKinematics__point__
+#ifndef __InverseKinematics__Joint__
+#define __InverseKinematics__Joint__
 
 #include <iostream>
 #include <fstream>
@@ -17,7 +17,7 @@
 #include "position.h"
 #include "axes.h"
 
-class Point {
+class Joint {
     Position position;
     Axes     BWDbasic;
     Axes     FWDbasic;
@@ -31,15 +31,15 @@ public:
     void setPosition(Position rhs);
     
 public:
-    Point();
-    Point(Position P, Axes F, Axes B);
-    Point(Point point[]);
-    Point(const Point& other );
-    Point& operator=(const Point& rhs);
+    Joint();
+    Joint(Position P, Axes F, Axes B);
+    Joint(Joint Joint[]);
+    Joint(const Joint& other );
+    Joint& operator=(const Joint& rhs);
     
 };
 
-#endif /* defined(__InverseKinematics__point__) */
+#endif /* defined(__InverseKinematics__Joint__) */
 
 
 

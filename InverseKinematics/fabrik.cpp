@@ -11,7 +11,7 @@
 #include <fstream>
 #include <cmath>
 #include <stdlib.h>
-#include "point.h"
+#include "Joint.h"
 #include "axes.h"
 #include "quaternion.h"
 #include "fabrik.h"
@@ -22,11 +22,11 @@ Fabrik::Fabrik(float tolerance, float eps) {
     epsilon = eps; //Error for out of bounds correction
 }
 
-void Fabrik::setGoal(Point x) {
+void Fabrik::setGoal(Joint x) {
     goal = x;
 }
 
-void Fabrik::setJoints(Point one, Point two, Point three, Point four) {
+void Fabrik::setJoints(Joint one, Joint two, Joint three, Joint four) {
     joints[0] = one;
     joints[1] = two;
     joints[2] = three;
@@ -47,7 +47,7 @@ void Fabrik::setJoints(Point one, Point two, Point three, Point four) {
     }
 }
 
-Point* Fabrik::getJoints() {
+Joint* Fabrik::getJoints() {
     return joints;
 }
 Vector3* Fabrik::getEulers() {
@@ -71,7 +71,7 @@ void Fabrik::shrinkEnd() {
     }
 }
 
-void Fabrik::SetOrientation(Point &This, Point Previous, int Type){
+void Fabrik::SetOrientation(Joint &This, Joint Previous, int Type){
     Axes tmp;
     Position X(This.getPosition() - Previous.getPosition());
     X.normalize();
@@ -97,7 +97,7 @@ void Fabrik::SetOrientation(Point &This, Point Previous, int Type){
     Orientation_Constraint(This, Previous, Type);
 }
 
-void Fabrik::Orientation_Constraint(Point &This, Point Previous, int Type){
+void Fabrik::Orientation_Constraint(Joint &This, Joint Previous, int Type){
     float epsilon = 0.001;
     float boundary = 180;
     //Check Colinear
@@ -162,19 +162,19 @@ void Fabrik::Orientation_Constraint(Point &This, Point Previous, int Type){
     }
 }
 
-//Use previous point's orientation to build up position constraint area and cut a segment with proper length
+//Use previous Joint's orientation to build up position constraint area and cut a segment with proper length
 //Position Constraint --> get joint[i]  //find the line(L) passing through Pi+1 and Pi
 //fitch the segment on L that satisfied the distance constraint (expressed by di)
 /* --------- --------- ---------
  REMAINING PROBLEMS:
  HOW TO PASS BOUNDARY VALUE INTO THIS FUNC?
- ARE THE AXES VALUE SET INTO POINT 'THIS'?
+ ARE THE AXES VALUE SET INTO Joint 'THIS'?
  MAY angleY angleZ BE THE SAME?
  SELECT BOUNDARY TO DECIDE q1?
  Quaternion Rotor(q1 * invRotor);//MAY BE WRONG
  --------- --------- ---------*/
 
-void Fabrik::Rotation_Constraint(Point &This, Point Previous, Axes PprevAxes){
+void Fabrik::Rotation_Constraint(Joint &This, Joint Previous, Axes PprevAxes){
 // Assuming the rotational constraint only applies on X axis, in another word, relation between two linked bones.
     float Bound1 = 60;
     float Bound2 = 30;
@@ -185,7 +185,7 @@ void Fabrik::Rotation_Constraint(Point &This, Point Previous, Axes PprevAxes){
     Vector3 AxisX(PprevAxes.GetXAxis());
     Vector3 AxisY(PprevAxes.GetYAxis());
     Vector3 AxisZ(PprevAxes.GetZAxis());
-    Position Origin = Previous.getPosition();       //Set PrevPoint as Origin
+    Position Origin = Previous.getPosition();       //Set PrevJoint as Origin
     Position bone(This.getPosition() - Origin);
     Vector3 BONE(bone.getX(),bone.getY(),bone.getZ());
     //Project BONE on XYZ axes.
@@ -228,9 +228,7 @@ void Fabrik::Rotation_Constraint(Point &This, Point Previous, Axes PprevAxes){
     Vector3 tmp1 = Quaternion::rotVbyQ(tmp0, RotRoundY);
     Vector3 target = Quaternion::rotVbyQ(tmp1, RotRoundZ);
     Position tar(target.getX(),target.getY(),target.getZ());
-    
-    
-    
+
     
     //P’i =di (new_P’i - Pi+1)/|| (new_P’i - Pi+1) ||
     Position dist = tar - Previous.getPosition();
@@ -241,19 +239,13 @@ void Fabrik::Rotation_Constraint(Point &This, Point Previous, Axes PprevAxes){
   }
 
 // Uses the FABRIK algorithm to compute IK.
-
-
-
-
-
-
 void Fabrik::compute() {
     int n = 4;
-    Point p0 = joints[0];
-    Point p1 = joints[1];
-    Point p2 = joints[2];
-    Point p3 = joints[3];
-    Point t = goal;
+    Joint p0 = joints[0];
+    Joint p1 = joints[1];
+    Joint p2 = joints[2];
+    Joint p3 = joints[3];
+    Joint t = goal;
     float r[3];
     float lambda[3];
     float dist;
@@ -262,7 +254,7 @@ void Fabrik::compute() {
     float dmax;
     float difA;
     Position b;
-    for (i = 0; i<3-1; i++ ){
+    for (i = 0; i<n-1; i++ ){
         dmax += d[i];
     }
     //UNEACHABLE
@@ -304,8 +296,7 @@ void Fabrik::compute() {
     GenBones();
     GenQW();
     GenQL();
-    GenEuler();
-    
+    GenEuler(); 
 }
 
 void Fabrik::GenBones(){

@@ -1,60 +1,60 @@
 //
-//  point.cpp
+//  Joint.cpp
 //  InverseKinematics
 //
 //  Created by MengTsao on 2/11/15.
 //  Copyright (c) 2015 MengTsao. All rights reserved.
 //
 
-#include "point.h"
-Point::Point(){
+#include "Joint.h"
+Joint::Joint(){
     position = Position();
     FWDbasic = Axes();
     BWDbasic = Axes();
 }
 
-Point::Point(Position P, Axes F, Axes B) {
+Joint::Joint(Position P, Axes F, Axes B) {
     position = P;
     FWDbasic = F;
     BWDbasic = B;
 }
 
-Point::Point(Point point[]) {
-    position = point->position;
-    FWDbasic = point->FWDbasic;
-    BWDbasic = point->BWDbasic;
+Joint::Joint(Joint Joint[]) {
+    position = Joint->position;
+    FWDbasic = Joint->FWDbasic;
+    BWDbasic = Joint->BWDbasic;
 }
 
-Point::Point( const Point& other ) {
+Joint::Joint( const Joint& other ) {
     position = other.position;
     FWDbasic = other.FWDbasic;
     BWDbasic = other.BWDbasic;
 }
 
 
-Point& Point::operator=(const Point& rhs) {
+Joint& Joint::operator=(const Joint& rhs) {
         this->position = rhs.position;
   		this->FWDbasic = rhs.FWDbasic;
         this->BWDbasic = rhs.BWDbasic;
     return *this;
 }
 
-Position Point::getPosition(){
+Position Joint::getPosition(){
     return this->position;
 }
-Axes Point::getFWDAxes(){
+Axes Joint::getFWDAxes(){
     return this->FWDbasic;
 }
-Axes Point::getBWDAxes(){
+Axes Joint::getBWDAxes(){
     return this->BWDbasic;
 }
-void Point::setFWDAxes(Axes rhs){
+void Joint::setFWDAxes(Axes rhs){
     this->FWDbasic = rhs;
 }
-void Point::setBWDAxes(Axes rhs){
+void Joint::setBWDAxes(Axes rhs){
     this->BWDbasic = rhs;
 }
 
-void Point::setPosition(Position rhs){
+void Joint::setPosition(Position rhs){
     this->position = rhs;
 }

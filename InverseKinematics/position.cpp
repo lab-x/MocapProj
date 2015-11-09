@@ -14,10 +14,10 @@ Position::Position(float xx, float yy, float zz) {
     values[2] = zz;
 }
 
-Position::Position(float point[]) {
-    values[0]= point[0];
-    values[1] = point[1];
-    values[2] = point[2];
+Position::Position(float Joint[]) {
+    values[0]= Joint[0];
+    values[1] = Joint[1];
+    values[2] = Joint[2];
 }
 
 Position::Position( const Position& other ) {

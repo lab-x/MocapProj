@@ -10,14 +10,14 @@
 #define __InverseKinematics__fabrik__
 
 #include <stdio.h>
-#include "point.h"
+#include "Joint.h"
 #include "axes.h"
 #include "quaternion.h"
 #include "vector3.h"
 
 class Fabrik {
-    Point goal;
-    Point joints[4];
+    Joint goal;
+    Joint joints[4];
     float d[3];
     Vector3 bone[3];
     Quaternion QW[3];
@@ -29,17 +29,17 @@ public:
     Fabrik() {}
     Fabrik(float tolerance, float eps);
     
-    void setJoints(Point one, Point two, Point three, Point four);
-    void setGoal(Point x);
+    void setJoints(Joint one, Joint two, Joint three, Joint four);
+    void setGoal(Joint x);
     
-    Point* getJoints();
+    Joint* getJoints();
     Vector3* getEulers();
     
     void compute();
     void shrinkEnd();
-    void Rotation_Constraint(Point& This, Point Prev, Axes PprevAxes);
-    void Orientation_Constraint(Point& This, Point Prev, int Type);
-    void SetOrientation(Point& This, Point Previous, int Type);
+    void Rotation_Constraint(Joint& This, Joint Prev, Axes PprevAxes);
+    void Orientation_Constraint(Joint& This, Joint Prev, int Type);
+    void SetOrientation(Joint& This, Joint Previous, int Type);
     void GenQW();
     void GenBones();
     void GenQL();
