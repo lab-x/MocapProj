@@ -46,7 +46,7 @@ public:
     
     public :
     static Vector3 Normalize(Vector3 vect);
-    
+ 
     static float Getlen(Vector3 vect);
     
     static void SetLength(Vector3 vect, float length);

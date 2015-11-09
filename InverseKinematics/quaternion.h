@@ -50,6 +50,7 @@ public :
     static Vector3 rotVbyQ(Vector3 v, Quaternion q);
     static Quaternion v2q(Vector3 vec1, Vector3 vec2);
     static Quaternion conjugate(Quaternion q1);
+    static Vector3 Quat2Angle(Quaternion q);
 };
 
 #endif /* defined(__InverseKinematics__quaternion__) */

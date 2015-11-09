@@ -39,6 +39,7 @@ float Vector3::getZ() {
     return values[2];
 }
 
+
 Vector3 Vector3::Normalize(Vector3 vect){
     return Vector3(vect / Vector3::Getlen(vect));
 }

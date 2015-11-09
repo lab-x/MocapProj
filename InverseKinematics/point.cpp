@@ -11,7 +11,6 @@ Point::Point(){
     position = Position();
     FWDbasic = Axes();
     BWDbasic = Axes();
-    getPosition()
 }
 
 Point::Point(Position P, Axes F, Axes B) {

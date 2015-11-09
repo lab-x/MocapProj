@@ -12,12 +12,17 @@
 #include <stdio.h>
 #include "point.h"
 #include "axes.h"
-
+#include "quaternion.h"
+#include "vector3.h"
 
 class Fabrik {
     Point goal;
     Point joints[4];
     float d[3];
+    Vector3 bone[3];
+    Quaternion QW[3];
+    Quaternion QL[3];
+    Vector3 Euler[3];
     float tol;
     float epsilon;
 public:
@@ -25,14 +30,20 @@ public:
     Fabrik(float tolerance, float eps);
     
     void setJoints(Point one, Point two, Point three, Point four);
-    void setGoal(Point x); 
+    void setGoal(Point x);
+    
     Point* getJoints();
+    Vector3* getEulers();
+    
     void compute();
     void shrinkEnd();
     void Rotation_Constraint(Point& This, Point Prev, Axes PprevAxes);
     void Orientation_Constraint(Point& This, Point Prev, int Type);
     void SetOrientation(Point& This, Point Previous, int Type);
-
+    void GenQW();
+    void GenBones();
+    void GenQL();
+    void GenEuler();
 };
 
 

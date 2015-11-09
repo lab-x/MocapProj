@@ -79,6 +79,11 @@ void Quaternion::normalize() {
  Vector3 B(-1,0,0);
  result in (0.00 nan nan nan)!
  --------- --------- ---------*/
+Quaternion Quaternion::conjugate(Quaternion q1)
+{
+    return Quaternion(q1.getW(), -q1.getX(), -q1.getY(), -q1.getZ());
+}
+
 Quaternion Quaternion::v2q(Vector3 vec1, Vector3 vec2)
 {
     Vector3 V1 = Vector3::Normalize(vec1);
@@ -96,20 +101,26 @@ Vector3 Quaternion::rotVbyQ(Vector3 v, Quaternion q)
     //Shall be same as the following
     // vector part of the quaternion
     /*Vector3 u(q.getX(),q.getY(),q.getZ());
-    // scalar part of the quaternion
-    float s = q.getW();
-    Vector3 vprime(u * 2.0f * Vector3::Dot(u, v) + v*(s*s - Vector3::Dot(u, u)) + Vector3::cross(u, v) * 2.0f * s);
-    return vprime;
-    */
-     Quaternion invq = Quaternion::conjugate(q);
-     Quaternion V(0, v.getX(), v.getY(), v.getZ());
-     Quaternion tmp1 = q*V;
-     Quaternion tmp = tmp1*invq;
-     Vector3 ret(tmp.getX(), tmp.getY(), tmp.getZ());
+     // scalar part of the quaternion
+     float s = q.getW();
+     Vector3 vprime(u * 2.0f * Vector3::Dot(u, v) + v*(s*s - Vector3::Dot(u, u)) + Vector3::cross(u, v) * 2.0f * s);
+     return vprime;
+     */
+    Quaternion invq = Quaternion::conjugate(q);
+    Quaternion V(0, v.getX(), v.getY(), v.getZ());
+    Quaternion tmp1 = q*V;
+    Quaternion tmp = tmp1*invq;
+    Vector3 ret(tmp.getX(), tmp.getY(), tmp.getZ());
     return ret;
 }
 
-Quaternion Quaternion::conjugate(Quaternion q1)
-{
-    return Quaternion(q1.getW(), -q1.getX(), -q1.getY(), -q1.getZ());
+Vector3 Quaternion::Quat2Angle(Quaternion q){
+    //Type 3 'YXZ'
+    float r11 = 2 * (q.getX() * q.getZ() + q.getW() * q.getY());
+    float r12 = powf(q.getW(), 2) - powf(q.getX(), 2) - powf(q.getY(), 2) + powf(q.getZ(), 2);
+    float r21 = -2 * (q.getY()*q.getZ() - q.getW() * q.getX());
+    float r31 = 2*(q.getX() * q.getY() + q.getW()*q.getZ());
+    float r32 =powf(q.getW(), 2) - powf(q.getX(), 2) + powf(q.getY(), 2) - powf(q.getZ(), 2);
+    Vector3 ret(atan2f(r11, r12), asinf(r21), atan2f(r31,r32));
+    return ret;
 }

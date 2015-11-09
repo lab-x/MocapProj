@@ -38,10 +38,20 @@ void Fabrik::setJoints(Point one, Point two, Point three, Point four) {
     d[0] = d0;
     d[1] = d1;
     d[2] = d2;
+    for (int i = 0; i<3; i++)
+    {
+        bone[i] = Vector3(1, 0, 0);
+        QW[i] = Quaternion(1,0,0,0);
+        QL[i] = Quaternion(1,0,0,0);
+        Euler[i] = Vector3(0,0,0);
+    }
 }
 
 Point* Fabrik::getJoints() {
     return joints;
+}
+Vector3* Fabrik::getEulers() {
+    return Euler;
 }
 
 // Fixes the out-of-reach problem.  Forces the last link to maintain its length,
@@ -60,7 +70,6 @@ void Fabrik::shrinkEnd() {
         goal = joints[4];
     }
 }
-
 
 void Fabrik::SetOrientation(Point &This, Point Previous, int Type){
     Axes tmp;
@@ -232,72 +241,104 @@ void Fabrik::Rotation_Constraint(Point &This, Point Previous, Axes PprevAxes){
   }
 
 // Uses the FABRIK algorithm to compute IK.
+
+
+
+
+
+
 void Fabrik::compute() {
-    int n = 3; //number of joints
+    int n = 4;
     Point p0 = joints[0];
     Point p1 = joints[1];
     Point p2 = joints[2];
     Point p3 = joints[3];
     Point t = goal;
-    
-    float dist = (p0.getPosition() - goal.getPosition()).getDistance();
-    
-    if ((dist - epsilon) > d[0] + d[1] + d[2]) {
-//Target unreachable
-        float r, lambda;
-        for (int i = 0; i < 3; i++) {
-            r = (goal.getPosition() - joints[i].getPosition()).getDistance();
-            lambda = d[i] / r;
-            joints[i+1].setPosition((1-lambda) * joints[i].getPosition() + lambda * goal.getPosition());
-            
+    float r[3];
+    float lambda[3];
+    float dist;
+    dist = (p0.getPosition() - goal.getPosition()).getDistance();
+    int i;
+    float dmax;
+    float difA;
+    Position b;
+    for (i = 0; i<3-1; i++ ){
+        dmax += d[i];
+    }
+    //UNEACHABLE
+    if (dist > dmax){
+        for(i = 0; i<n-1;i++){
+            r[i] = (joints[i].getPosition()-goal.getPosition()).getDistance();
+            lambda[i] = d[i]/r[i];
+            joints[i+1].setPosition((1 - lambda[i]) * joints[i].getPosition() + lambda[i]*goal.getPosition());
         }
     }
-//Target reachable
-    //Use previous point's orientation to build up position constraint area and cut a segment with proper length
-    //Position Constraint --> get joint[i]  //find the line(L) passing through Pi+1 and Pi
-    //fitch the segment on L that satisfied the distance constraint (expressed by di)
-
-    //After we got the position of new Pi, we apply the previous orientation[X, Y, Z] on that point and we check the oritation boundary, then apply the new orientation satisfied the constraint.
-
-    else {
-        Point b = p0;
-        float difA = (p3.getPosition() - t.getPosition()).getDistance();
-        while (difA > tol) {
-            //STAGE ONE: Forward Reaching
-            joints[n] = t;
-            for (int i = n-1; i >= 0; i--) {
-                if(i<2){
-                    Vector3 X(joints[i+2].getFWDAxes().GetXAxis());
-                    Vector3 Y(joints[i+2].getFWDAxes().GetYAxis());
-                    Vector3 Z(joints[i+2].getFWDAxes().GetZAxis());
-                    Axes axes(X,Y,Z);
-                   // Rotation_Constraint(joints[i], joints[i+1],axes);
-                 }
-                float r = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
-                float lambda = d[i] / r;
-                joints[i].setPosition((1-lambda) * joints[i+1].getPosition() + lambda * joints[i].getPosition());
-                
-                //SetOrientation(joints[i], joints[i+1], 1);
+    //REACHABLE
+    else{
+        b = joints[0].getPosition();
+        Position distA(joints[n-1].getPosition()-goal.getPosition());
+        difA = distA.getDistance();
+        
+        while (difA > tol)
+        {
+            //   STAGE1 FORWARD REACHING
+            joints[n-1].setPosition(goal.getPosition());
+            for(i = n-2; i>=0; i--){
+                r[i] = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
+                lambda[i] = d[i]/r[i];
+                Position P = ((1-lambda[i]) * joints[i+1].getPosition() + lambda[i] * joints[i].getPosition());
+                joints[i].setPosition(P);
             }
-            //STAGE 2: Backward Reaching
-            joints[0] = b;
-            for (int i = 0; i < n-1; i++) {
-                if(i > 1){
-                    Vector3 X(joints[i-2].getBWDAxes().GetXAxis());
-                    Vector3 Y(joints[i-2].getBWDAxes().GetYAxis());
-                    Vector3 Z(joints[i-2].getBWDAxes().GetZAxis());
-                    Axes axes(X,Y,Z);
-                  //  Rotation_Constraint(joints[i], joints[i-1],axes);
-                }
-                float r = (joints[i+1].getPosition() - joints[i].getPosition()).getDistance();
-                float lambda = d[i] / r;
-                joints[i+1].setPosition((1-lambda) * joints[i].getPosition() + lambda * joints[i+1].getPosition());
-                
-                //SetOrientation(joints[i+1], joints[i], 2);
+            // STAGE2 BACKWARD REACHING
+            joints[0].setPosition(b);
+            for(i = 0; i<n-2; i++){
+                r[i] = (joints[i].getPosition() - joints[i+1].getPosition()).getDistance();
+                lambda[i] = d[i]/r[i];
+                Position P = (1-lambda[i])*joints[i].getPosition() + lambda[i]* joints[i+1].getPosition();
+                joints[i+1].setPosition(P);
             }
-            difA = (joints[n].getPosition() - t.getPosition()).getDistance();
+            difA = (joints[n-1].getPosition() - goal.getPosition()).getDistance();
         }
     }
+    shrinkEnd();
+    GenBones();
+    GenQW();
+    GenQL();
+    GenEuler();
     
-    //shrinkEnd();
 }
+
+void Fabrik::GenBones(){
+    Position b[3];
+    int i = 0;
+    for(i = 0; i< 3; i++)
+    {
+        b[i] = joints[i+1].getPosition()-joints[i].getPosition();
+        bone[i] = Vector3(b[i].getX(), b[i].getY(), b[i].getZ());
+    }
+}
+void Fabrik::GenQW() {
+    
+    int n = 3; //number of joints  (Shoulder Elbow Wrist)
+
+    for(int i = 0; i<n; i++)
+    {
+        QW[i] = Quaternion::v2q(Vector3(1,0,0), Vector3::Normalize(bone[i]));
+    }
+}
+void Fabrik::GenQL() {
+    int n = 3; //number of joints  (Shoulder Elbow Wrist)
+    QL[0] = QW[0];
+    for(int i = 1; i<n; i++)
+    {
+        Quaternion invQParent = Quaternion::conjugate(QW[i-1]);
+        QL[i] = invQParent * QW[i];
+    }
+    
+}
+void Fabrik::GenEuler(){
+    for(int i=0; i<3; i++){
+        Euler[i] = Quaternion::Quat2Angle(QL[i]) * 57.3;
+    }
+}
+    
