@@ -39,6 +39,16 @@ float Vector3::getZ() {
     return values[2];
 }
 
+void Vector3::norm() {
+    float length = sqrt(values[0] * values[0] + values[1] * values[1] + values[2]* values[2]);
+    
+    if (length == 0){
+        return;
+    }
+    values[0] = values[0] / length;
+    values[1] = values[1] / length;
+    values[2] = values[2] / length;
+}
 
 Vector3 Vector3::Normalize(Vector3 vect){
     return Vector3(vect / Vector3::Getlen(vect));

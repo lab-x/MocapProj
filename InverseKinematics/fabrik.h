@@ -10,6 +10,11 @@
 #define __InverseKinematics__fabrik__
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
 #include "Joint.h"
 #include "axes.h"
 #include "quaternion.h"
@@ -25,6 +30,8 @@ class Fabrik {
     Vector3 Euler[3];
     float tol;
     float epsilon;
+    Vector3 initialBone[3] ;
+
 public:
     Fabrik() {}
     Fabrik(float tolerance, float eps);
@@ -35,15 +42,16 @@ public:
     Joint* getJoints();
     Vector3* getEulers();
     
-    void compute();
+    void compute(int LinkNo);
     void shrinkEnd();
     void Rotation_Constraint(Joint& This, Joint Prev, Axes PprevAxes);
     void Orientation_Constraint(Joint& This, Joint Prev, int Type);
     void SetOrientation(Joint& This, Joint Previous, int Type);
-    void GenQW();
-    void GenBones();
-    void GenQL();
-    void GenEuler();
+    void GenQW(int LinkNo);
+    void GenBones(int LinkNo);
+    void GenQL(int LinkNo);
+    void GenEuler(int LinkNo);
+    void Position_Constraints(Joint &This, int thisID, int Dir, int LinkNo);
 };
 
 

@@ -6,14 +6,6 @@
 //  Copyright (c) 2015 MengTsao. All rights reserved.
 //
 
-#include "vector3.h"
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <stdlib.h>
-#include "Joint.h"
-#include "axes.h"
-#include "quaternion.h"
 #include "fabrik.h"
 
 
@@ -40,11 +32,16 @@ void Fabrik::setJoints(Joint one, Joint two, Joint three, Joint four) {
     d[2] = d2;
     for (int i = 0; i<3; i++)
     {
+        Position b = joints[i+1].getPosition() - joints[i].getPosition();
+        initialBone[i] = Vector3 (b.getX(), b.getY(), b.getZ()) ;
+        bone[i] = initialBone[i] ;
+
         bone[i] = Vector3(1, 0, 0);
         QW[i] = Quaternion(1,0,0,0);
         QL[i] = Quaternion(1,0,0,0);
         Euler[i] = Vector3(0,0,0);
     }
+
 }
 
 Joint* Fabrik::getJoints() {
@@ -239,7 +236,7 @@ void Fabrik::Rotation_Constraint(Joint &This, Joint Previous, Axes PprevAxes){
   }
 
 // Uses the FABRIK algorithm to compute IK.
-void Fabrik::compute() {
+void Fabrik::compute(int LinkNo) {
     int n = 4;
     Joint p0 = joints[0];
     Joint p1 = joints[1];
@@ -257,7 +254,7 @@ void Fabrik::compute() {
     for (i = 0; i<n-1; i++ ){
         dmax += d[i];
     }
-    //UNEACHABLE
+    //UNREACHABLE
     if (dist > dmax){
         for(i = 0; i<n-1;i++){
             r[i] = (joints[i].getPosition()-goal.getPosition()).getDistance();
@@ -292,14 +289,85 @@ void Fabrik::compute() {
             difA = (joints[n-1].getPosition() - goal.getPosition()).getDistance();
         }
     }
-    shrinkEnd();
-    GenBones();
-    GenQW();
-    GenQL();
-    GenEuler(); 
+    int isNan = 0;
+    for (int i = 0; i < 4; i++) {
+     if( joints[i].getPosition().getX() != joints[i].getPosition().getX()){
+         isNan = 1;
+         break;
+     }
+    }
+    if(isNan){
+        printf("Nan\n");
+        Axes AxesInit;
+        Position p0 (0,0.4,0);
+        Position p1 (0.2,0.4,0);
+        Position p2 (0.4,0.4,0);
+        Position p3 (0.6,0.4,0);
+        Joint P0(p0, AxesInit, AxesInit);
+        Joint P1(p1, AxesInit, AxesInit);
+        Joint P2(p2, AxesInit, AxesInit);
+        Joint P3(p3, AxesInit, AxesInit);
+        setJoints(P0,P1,P2,P3);
+        Fabrik::compute(LinkNo);
+    }
+    else{
+        isNan = 0;
+        //shrinkEnd();
+        GenBones(LinkNo);
+        GenQW(LinkNo);
+        GenQL(LinkNo);
+        GenEuler(LinkNo);
+    }
 }
 
-void Fabrik::GenBones(){
+//This -->Joints[i] thisID-->i Dir-->BWD/FWD  LinkNo-->(1:4);
+void Fabrik::Position_Constraints(Joint &This, int thisID, int Dir, int LinkNo){
+    Position P[3];
+    Vector3 Bones[2];
+    int i;
+    if(Dir == 0){
+    //fwd  use joints[i+2],[i+1].[i]
+        for(i =0; i<3;i++){
+            P[i] =joints[thisID + i].getPosition();
+        }
+    }
+    else{
+    //bwd   use joints[i],[i-1],[i-2]
+        for(i =0; i<3;i++){
+            P[i] =joints[thisID + 2 - i].getPosition();
+        }
+    }
+    // Generate 2 Bones' Vector
+    for(i = 0; i< 2; i++){
+        Position b = P[i+1] - P[i];
+        Bones[i] = Vector3(b.getX(), b.getY(), b.getZ());
+    }
+    
+    Quaternion Q = Quaternion::v2q(Vector3::Normalize(bone[0]), Vector3::Normalize(bone[1]));
+    
+    /*
+    //Generate 2 bone vectors' world quaternion
+    for(int i = 0; i<2; i++){
+        Vector3 I = Vector3::Normalize(initialBone[i]) ;
+        QW[i] = Quaternion::v2q(I, Vector3::Normalize(bone[i]));
+    }
+    Quaternion invQParent = Quaternion::conjugate(QW[0]);
+    Quaternion QL = invQParent * QW[1];
+    Vector3 Euler = Quaternion::Quat2Angle(QL) * 57.3;
+    */
+
+    if(Dir == 0){
+        //fwd  use joints[i+2],[i+1].[i]
+//        Set P[0] set[i]
+    }
+    else{
+        //bwd   use joints[i],[i-1],[i-2]
+//        Set P[2]  set[i]
+    }
+}
+
+
+void Fabrik::GenBones(int LinkNo){
     Position b[3];
     int i = 0;
     for(i = 0; i< 3; i++)
@@ -308,26 +376,26 @@ void Fabrik::GenBones(){
         bone[i] = Vector3(b[i].getX(), b[i].getY(), b[i].getZ());
     }
 }
-void Fabrik::GenQW() {
+void Fabrik::GenQW(int LinkNo) {
     
     int n = 3; //number of joints  (Shoulder Elbow Wrist)
 
-    for(int i = 0; i<n; i++)
-    {
-        QW[i] = Quaternion::v2q(Vector3(1,0,0), Vector3::Normalize(bone[i]));
+    for(int i = 0; i<n; i++){
+//        QW[i] = Quaternion::v2q(Vector3(1,0,0), Vector3::Normalize(bone[i]));
+        QW[i] = Quaternion::v2q(Vector3::Normalize(bone[LinkNo]), Vector3::Normalize(bone[i]));
+
     }
 }
-void Fabrik::GenQL() {
+void Fabrik::GenQL(int LinkNo) {
     int n = 3; //number of joints  (Shoulder Elbow Wrist)
     QL[0] = QW[0];
-    for(int i = 1; i<n; i++)
-    {
+    for(int i = 1; i<n; i++){
         Quaternion invQParent = Quaternion::conjugate(QW[i-1]);
         QL[i] = invQParent * QW[i];
     }
     
 }
-void Fabrik::GenEuler(){
+void Fabrik::GenEuler(int LinkNo){
     for(int i=0; i<3; i++){
         Euler[i] = Quaternion::Quat2Angle(QL[i]) * 57.3;
     }

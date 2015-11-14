@@ -43,6 +43,7 @@ public:
     friend Vector3 operator/(Vector3 lhs, const float& num){
         return Vector3(lhs.values[0] / num, lhs.values[1] / num, lhs.values[2] / num);
     };
+    void norm();
     
     public :
     static Vector3 Normalize(Vector3 vect);

@@ -61,31 +61,33 @@ void generateLinks() {
 }
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    
+
 //Initialization Part
     generateLinks();
-//-----------------------------LOOP
-    fabrik.compute();
+   // for(int i = 0; i<500; i++)
+   // {
+    fabrik.compute(0);
     Joint* joints = fabrik.getJoints();
     Vector3* Eulers = fabrik.getEulers();
     
     for (int i = 0; i < jointNum; i++) {
         printf("joint %d \nPosition:%lf,%lf,%lf\n",i,joints[i].getPosition().getValues()[0],joints[i].getPosition().getValues()[1],joints[i].getPosition().getValues()[2]);
     }
-    for(int i = 0; i<jointNum-1; i++)
-    {
-        printf("bone %d \nEuler:%lf,%lf,%lf\n",i,Eulers[i].getX(),Eulers[i].getY(),Eulers[i].getZ());
-        
-    }
     fabrik.setJoints(joints[0],joints[1],joints[2],joints[3]);
-    
-    Position goal(15, 10, 0);
-    Axes AxesInit;
-    Joint GOAL(goal, AxesInit, AxesInit);
-    
-    fabrik.setGoal(GOAL);
-//-----------------------------LOOPEND
-    
+       
+      //  Position goal(i, i+1, 3);
+
+        Axes AxesInit;
+        Joint GOAL(goal, AxesInit, AxesInit);
+        
+      //  fabrik.setGoal(GOAL);
+      //}
+      //-----------------------------LOOPEND
+  /*  Vector3 VV = Vector3(2,6,1);
+    Quaternion QQ = Quaternion(2,3,1,1);
+    VV.norm();
+    QQ.normalize();
+    printf("Vector:%lf,%lf,%lf\n Quaternion: %f, %f, %f, %f\n",VV.getX(),VV.getY(),VV.getZ(),QQ.getW(),QQ.getX(),QQ.getY(),QQ.getZ());
     return 0;
+   */
 }
