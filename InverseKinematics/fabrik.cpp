@@ -59,12 +59,12 @@ void Fabrik::shrinkEnd() {
     float dExact = d[2];
     
     if (dCalc - dExact > 0.0001 || dCalc - dExact < -0.0001) {
-        Position vector(goal.getPosition() - joints[3].getPosition());
+        Position vector(goal.getPosition() - joints[2].getPosition());
         vector.normalize();
         double factor = dExact / vector.getDistance();
-        joints[4].setPosition(joints[3].getPosition()+vector*factor);
+        joints[3].setPosition(joints[2].getPosition()+vector*factor);
         //joints[4] = joints[3] + (vector * factor);
-        goal = joints[4];
+        goal = joints[3];
     }
 }
 
