@@ -124,3 +124,41 @@ Vector3 Quaternion::Quat2Angle(Quaternion q){
     Vector3 ret(atan2f(r11, r12), asinf(r21), atan2f(r31,r32));
     return ret;
 }
+
+void Quaternion::Quat2AxisAngle(Quaternion q, Vector3 *axis, float *angle){
+    float x,y,z;
+    
+    float theta = 2 * acos(q.getW());
+    *angle = theta*57.3;
+    
+    float s = sqrt(1-q.getW()*q.getW());
+    // assuming quaternion normalised then w is less than 1, so term always positive.
+    if (s < 0.01) { // test to avoid divide by zero, s is always positive due to sqrt
+        // if s close to zero then direction of axis not important
+        x = q.getX(); // if it is important that axis is normalised then replace with x=1; y=z=0;
+        y = q.getY();
+        z = q.getZ();
+    } else {
+        x = q.getX() / s; // normalise axis
+        y = q.getY() / s;
+        z = q.getZ() / s;
+    }
+    
+    Vector3 A = Vector3(x,y,z);
+    A.norm();
+    *axis = A;
+}
+void Quaternion::AxisAngle2Quat(Vector3 axis, float angle, Quaternion *q ){
+    float RadAng = angle/57.3;
+    float qw = cos(RadAng/2);
+    float qx = axis.getX() * sin(RadAng/2);
+    float qy = axis.getY() * sin(RadAng/2);
+    float qz = axis.getZ() * sin(RadAng/2);
+    *q = Quaternion(qw,qx,qy,qz);
+}
+
+
+void Quaternion::test(int a, int b, int *c){
+    int rst = a*b;
+    *c = rst;
+}

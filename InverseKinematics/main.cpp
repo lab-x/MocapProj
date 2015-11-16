@@ -64,30 +64,25 @@ int main(int argc, const char * argv[]) {
 
 //Initialization Part
     generateLinks();
-   // for(int i = 0; i<500; i++)
-   // {
     fabrik.compute(0);
     Joint* joints = fabrik.getJoints();
-    Vector3* Eulers = fabrik.getEulers();
+    //Vector3* Eulers = fabrik.getEulers();
     
     for (int i = 0; i < jointNum; i++) {
         printf("joint %d \nPosition:%lf,%lf,%lf\n",i,joints[i].getPosition().getValues()[0],joints[i].getPosition().getValues()[1],joints[i].getPosition().getValues()[2]);
     }
     fabrik.setJoints(joints[0],joints[1],joints[2],joints[3]);
-       
-      //  Position goal(i, i+1, 3);
-
-        Axes AxesInit;
-        Joint GOAL(goal, AxesInit, AxesInit);
+    Axes AxesInit;
+    Joint GOAL(goal, AxesInit, AxesInit);
         
-      //  fabrik.setGoal(GOAL);
-      //}
-      //-----------------------------LOOPEND
-  /*  Vector3 VV = Vector3(2,6,1);
-    Quaternion QQ = Quaternion(2,3,1,1);
-    VV.norm();
-    QQ.normalize();
-    printf("Vector:%lf,%lf,%lf\n Quaternion: %f, %f, %f, %f\n",VV.getX(),VV.getY(),VV.getZ(),QQ.getW(),QQ.getX(),QQ.getY(),QQ.getZ());
-    return 0;
+//-----------------------------LOOPEND
+  /*TEST CODE
+   Vector3 axis;
+   float angle;
+   Quaternion newQ = Quaternion();
+   Quaternion::Quat2AxisAngle(Quaternion(0.707,0,-0.707,0), &axis, &angle);
+   printf("%lf,  %lf,  %lf      %lf\n",axis.getX(),axis.getY(),axis.getZ(),angle);
+   Quaternion::AxisAngle2Quat(axis, angle, &newQ);
+   printf("%lf,  %lf,  %lf,  %lf\n", newQ.getW(),newQ.getX(),newQ.getY(),newQ.getZ());
    */
 }

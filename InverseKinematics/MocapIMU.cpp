@@ -7,8 +7,7 @@
 //
 
 #include "MocapIMU.h"
-
-
+// Create All Nodes
 MocapIMU::MocapIMU(){
     //Nodes[17]
     Nodes[0]  = MemsNode(1, 2 );
@@ -38,6 +37,11 @@ MocapIMU::MocapIMU(){
     HipPosition = Position(0, 0, 0);
 }
 
+/*
+ T-Pose Button --> setQT 1-17 
+ A-Pose Button --> setQA 1-17
+ Calibrate all Nodes
+*/
 void MocapIMU::calibrate(){
     int i;
     for(i =0; i<17; i++){

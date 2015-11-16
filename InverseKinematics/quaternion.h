@@ -51,6 +51,10 @@ public :
     static Quaternion v2q(Vector3 vec1, Vector3 vec2);
     static Quaternion conjugate(Quaternion q1);
     static Vector3 Quat2Angle(Quaternion q);
+    // result axis and angle(degree)
+    static void Quat2AxisAngle(Quaternion q, Vector3 *axis, float *angle);
+    static void AxisAngle2Quat(Vector3 axis, float angle, Quaternion *q);
+    static void test(int a, int b, int *c);
 };
 
 #endif /* defined(__InverseKinematics__quaternion__) */
